@@ -60,7 +60,9 @@ jobs:
           name: Upload coverage to Codecov
           command: |
             source .venv/bin/activate
-            bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN} -f coverage.xml || echo "Codecov upload failed"
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN} -f coverage.xml || echo "Codecov upload failed"
 
 workflows:
   version: 2
