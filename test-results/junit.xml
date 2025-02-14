@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="0.144" timestamp="2025-02-14T16:41:01.206805-05:00" hostname="YYY"><testcase classname="tests.test_calculator" name="test_add" time="0.003" /><testcase classname="tests.test_calculator" name="test_subtract" time="0.001" /><testcase classname="tests.test_calculator" name="test_multiply" time="0.001" /><testcase classname="tests.test_logger" name="test_log" time="0.001"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'operations.log'">def test_log() -&gt; None:
+        """Test logging functionality."""
+        Logger.log("Test log entry")
+    
+&gt;       with LOG_FILE.open() as file:
+
+tests\test_logger.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('operations.log'), mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'operations.log'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2544.0_x64__qbz5n2kfra8p0\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.test_notifier" name="test_send_alert" time="0.001" /></testsuite></testsuites>
