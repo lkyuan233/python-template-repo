@@ -1,0 +1,9 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        informational: true
+        branches:
+          - main
+          - test-coverage
