@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@5  # 添加 Codecov Orb
+
 jobs:
   lint_and_test:
     docker:
@@ -41,10 +44,10 @@ jobs:
             pytest --collect-only
 
       - run:
-          name: Run Tests with Coverage (Skipping test_logger.py)
+          name: Run Tests with Coverage
           command: |
             source .venv/bin/activate
-            pytest --cov=src --cov-report=xml --cov-report=html --junitxml=test-results/junit.xml --ignore=tests/test_logger.py
+            pytest --cov=src --cov-report=xml --cov-report=html --junitxml=test-results/junit.xml
 
       - store_test_results:
           path: test-results/
@@ -56,16 +59,10 @@ jobs:
       - store_artifacts:
           path: coverage.xml
 
-      - run:
-          name: Upload coverage to Codecov
-          command: |
-            source .venv/bin/activate
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -f coverage.xml || echo "Codecov upload failed"
+      - codecov/upload
 
 workflows:
   version: 2
-  validate:
+  upload-to-codecov:
     jobs:
       - lint_and_test
