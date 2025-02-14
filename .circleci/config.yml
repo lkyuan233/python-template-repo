@@ -11,9 +11,10 @@ jobs:
           name: Install Dependencies
           command: |
             pip install uv
-            uv venv  # 创建虚拟环境
-            source .venv/bin/activate  # 启用虚拟环境
+            uv venv
+            source .venv/bin/activate
             uv pip install -r requirements.txt
+            uv pip install pytest-cov
 
       - run:
           name: Run Ruff Linting
@@ -26,6 +27,12 @@ jobs:
           command: |
             source .venv/bin/activate
             mypy src/
+
+      - run:
+          name: Verify Tests Exist
+          command: |
+            source .venv/bin/activate
+            pytest --collect-only
 
       - run:
           name: Run Tests with Coverage
