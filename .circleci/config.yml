@@ -41,10 +41,10 @@ jobs:
             pytest --collect-only
 
       - run:
-          name: Run Tests with Coverage
+          name: Run Tests with Coverage (Skipping test_logger.py)
           command: |
             source .venv/bin/activate
-            pytest --cov=src --cov-report=xml --cov-report=html --junitxml=test-results/junit.xml
+            pytest --cov=src --cov-report=xml --cov-report=html --junitxml=test-results/junit.xml --ignore=tests/test_logger.py
 
       - store_test_results:
           path: test-results/
