@@ -6,27 +6,48 @@ jobs:
       - image: python:3.10
     steps:
       - checkout
+
       - run:
           name: Install Dependencies
           command: |
             pip install uv
+            uv venv  # 创建虚拟环境
+            source .venv/bin/activate  # 启用虚拟环境
             uv pip install -r requirements.txt
+
       - run:
           name: Run Ruff Linting
-          command: ruff check src/ tests/
+          command: |
+            source .venv/bin/activate
+            ruff check src/ tests/
+
       - run:
           name: Run Mypy Type Checking
-          command: mypy src/
+          command: |
+            source .venv/bin/activate
+            mypy src/
+
       - run:
           name: Run Tests with Coverage
           command: |
+            source .venv/bin/activate
             pytest --cov=src --cov-report=xml --cov-report=html --junitxml=test-results/junit.xml
+
       - store_test_results:
           path: test-results/
-      - store_artifacts:
-          path: coverage.xml
+
       - store_artifacts:
           path: htmlcov/
+          destination: coverage_html
+
+      - store_artifacts:
+          path: coverage.xml
+
+      - run:
+          name: Upload coverage to Codecov
+          command: |
+            source .venv/bin/activate
+            bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN} -f coverage.xml
 
 workflows:
   version: 2
