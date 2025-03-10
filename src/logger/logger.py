@@ -9,7 +9,7 @@ logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    filemode="w",
+    filemode="a",
 )
 
 logger = logging.getLogger('logger')

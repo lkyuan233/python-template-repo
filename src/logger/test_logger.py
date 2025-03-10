@@ -1,21 +1,21 @@
-"""Logger module for tracking operations performed by the calculator."""
+"""Unit tests for Logger module."""
 
 import logging
 from pathlib import Path
 
-LOG_FILE = Path("operations.log")
+from .logger import Logger
 
-# Configure logging to write to a file
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(message)s")
+LOG_FILE = "operations.log"
+TEST_MESSAGE = "Test message"
 
-class Logger:
-    """Logger class to log operations performed by the calculator."""
+def test_logger_log_message() -> None:
+    """Test that Logger.log writes a message to the log file."""
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(message)s")
 
-    @staticmethod
-    def log(message: str) -> None:
-        """Log a message to the operations log file and force flush."""
-        logging.info(message)
+    logger = Logger()
 
-        # Flush logging handlers to ensure the message is written immediately
-        for handler in logging.getLogger().handlers:
-            handler.flush()
+    logger.log(TEST_MESSAGE)
+
+    with Path(LOG_FILE).open("r") as f:
+        content = f.read()
+    assert TEST_MESSAGE in content

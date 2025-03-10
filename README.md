@@ -15,13 +15,23 @@ git clone https://github.com/lkyuan233/python-template-repo.git
 cd python-template-repo
 ```
 
-2️⃣ **Install Dependencies**
+2️⃣ **Install UV**
+- on MacOS/Linux:
+```sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+- on Windows:
+```sh
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+3️⃣ **Install Dependencies**
 ```sh
 pip install --upgrade pip
 uv pip install -r requirements.txt
 ```
 
-3️⃣ **Run Static Analysis & Formatting**
+4️⃣ **Run Static Analysis & Formatting**
 ```sh
 ruff check .
 mypy src/
@@ -88,15 +98,29 @@ python -m pytest src
 python -m pytest tests/e2e.py
 ```
 
-For the output, please refer to the **operations.log** file.
+### For the output, please refer to the **operations.log** file.
 
-📊 **Viewing Coverage Report**
+- **Run all tests (integration & end-to-end):**
+```sh
+python -m pytest tests
+```
+
+📊 **CI/CD Links**
+1. *Passed Tests:*
+```sh
+
+```
+2. *Failed Tests:*
+```sh
+
+```
+3. *Viewing Coverage Report:*
 ```sh
 https://output.circle-artifacts.com/output/job/0011c25d-67b5-44be-9d81-cdeb94aa7f68/artifacts/0/coverage_html/index.html
 ```
 
 ### **CI/CD Pipeline (CircleCI)**
-1. Tests are executed on every push to GitHub.
+1. Tests are executed on every push to GitHub or every PR created on GitHub.
 2. Results are visible in CircleCI’s “Tests” section.
 3. Test coverage report is available via CircleCI artifacts.
 
@@ -122,6 +146,7 @@ mypy src/
 If any check fails, fix issues before committing.
 
 **Note:** ruff checks have **D203 disabled**.
+-- enabling D203 can lead to conflicts between the linter and the formatter.
 
 📜 **Logging**
 - **All operations are also logged into** `operations.log`
@@ -134,5 +159,3 @@ If any check fails, fix issues before committing.
 
 # License
 This project is licensed under the MIT License. For more details, see the `LICENSE` file.
-
-

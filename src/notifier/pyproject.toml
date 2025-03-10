@@ -1,0 +1,5 @@
+[project]
+name = "notifier"
+version = "0.1.0"
+description = "Notifier module for sending alerts when a threshold is exceeded."
+dependencies = []
