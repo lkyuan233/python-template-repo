@@ -1,31 +1,25 @@
 """Logger module for logging operations performed."""
 
 import logging
+from pathlib import Path
 
-LOG_FILE = "operations.log"
+LOG_FILE = Path("operations.log")
 
-# Configure logging to write to a file
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    filemode="w",
-)
-
-logger = logging.getLogger('logger')
-logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('operations.log')
-fh.setLevel(logging.DEBUG)
-logger.addHandler(fh)
+# Configure logging only if not already configured
+logger = logging.getLogger(__name__)  # ✅ Uses dynamic module name
+if not logger.hasHandlers():
+    handler = logging.FileHandler(LOG_FILE, mode="a")  # ✅ Append mode (does not overwrite logs)
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    handler.setLevel(logging.INFO)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
 
 class Logger:
-    """Logger class to log operations performed by the calculator."""
+    """Logger class to log operations performed."""
 
     @staticmethod
     def log(message: str) -> None:
-        """Log a message to the operations log file and force flush."""
-        logger.info(message)
+        """Log a message to the operations log file."""
+        logger.info(message)  # ✅ No need to manually flush logs
 
-        # Flush logging handlers to ensure the message is written immediately
-        for handler in logging.getLogger().handlers:
-            handler.flush()
