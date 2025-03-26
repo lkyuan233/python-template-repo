@@ -44,6 +44,18 @@ This repository includes three key components: (please refer to `component.md`)
 - **Logger** – Records calculator operations.
 - **Notifier** – Sends an alert when results exceed a threshold.
 
+**Setting PYTHONPATH**
+
+For Windows use the following command:
+```sh
+set PYTHONPATH=%CD%
+```
+
+For MacOS use the following command:
+```sh
+export PYTHONPATH=$(pwd)
+```
+
 ✅ **Running Tests**
 
 This project uses **pytest** for unit, integration and end-to-end testing.
