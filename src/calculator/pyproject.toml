@@ -1,5 +1,12 @@
 [project]
 name = "calculator"
 version = "0.1.0"
-description = "A simple calculator to perform basic arithmetic operations."
-dependencies = []
+description = "Calculator component for basic arithmetic"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["numpy>=2.2.3", "pytest>=8.3.5"]
+
+# Defines the build system required for setuptools
+[build-system]
+requires = ["setuptools", "wheel"]      # Required for building the package
+build-backend = "setuptools.build_meta"

@@ -1,5 +1,12 @@
 [project]
 name = "logger"
 version = "0.1.0"
-description = "Logger module for logging operations performed."
-dependencies = []
+description = "Logger component for logging operations"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["pytest>=8.3.5"]
+
+# Defines the build system required for setuptools
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
