@@ -3,7 +3,7 @@ name = "logger"
 version = "0.1.0"
 description = "Logger component for logging operations"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = ["pytest>=8.3.5"]
 
 # Defines the build system required for setuptools
