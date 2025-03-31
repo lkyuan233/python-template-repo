@@ -9,7 +9,7 @@ The AI Conversation Client is a lightweight Python module designed to facilitate
 3. **Chat history retrieval:** Access previous messages in an ongoing session.
 4. **User preferences:** Customize user settings for AI interactions.
 
-# API Reference
+# **API Reference**
 
 **AIConversationClient Class**
 
@@ -18,52 +18,52 @@ The AI Conversation Client is a lightweight Python module designed to facilitate
 client = AIConversationClient()
 ```
 
-**send_message(session_id: str, message: str) -> dict**
+1. **send_message(session_id: str, message: str) -> dict**
 - Sends a message to the AI and returns a response.
 
 Args:
-    session_id (str): Unique session identifier.
-    message (str): User's message.
+    - session_id (str): Unique session identifier.
+    - message (str): User's message.
 
 Returns:
-    dict: AI-generated reply.
+    - dict: AI-generated reply.
 
-**get_chat_history(session_id: str) -> list**
+2. **get_chat_history(session_id: str) -> list**
 - Retrieves chat history for a session.
 
 Args:
-    session_id (str): Unique session identifier.
+    - session_id (str): Unique session identifier.
 
 Returns:
-    list: A list of message dictionaries.
+    - list: A list of message dictionaries.
 
-**set_user_preferences(user_id: str, preferences: dict) -> bool**
+3. **set_user_preferences(user_id: str, preferences: dict) -> bool**
 - Updates user preferences for AI interactions.
 
 Args:
-    user_id (str): Unique user identifier.
-    preferences (dict): Dictionary of preferences.
+    - user_id (str): Unique user identifier.
+    - preferences (dict): Dictionary of preferences.
 
 Returns:
-    bool: Success status.
+    - bool: Success status.
 
-**start_new_session(user_id: str) -> str**
+4. **start_new_session(user_id: str) -> str**
 - Starts a new conversation session.
 
 Args:
-    user_id (str): Unique user identifier.
+    - user_id (str): Unique user identifier.
 
 Returns:
-    str: New session ID.
+    - str: New session ID.
     
-**end_session(session_id: str) -> bool**
+5. **end_session(session_id: str) -> bool**
 - Ends an active conversation session.
 
 Args:
-    session_id (str): Unique session identifier.
+    - session_id (str): Unique session identifier.
 
 Returns:
-    bool: Success status.
+    - bool: Success status.
 
 **Setup & Installation**
 
@@ -82,7 +82,7 @@ Run tests with:
 uv run pytest
 ```
 
-#Project Scope
+# **Project Scope**
 
 **Minimum Viable Product (MVP)**
 Users can send messages and receive AI responses.
@@ -101,5 +101,5 @@ Advanced personalization beyond basic preferences.
 - Commit changes: `git commit -m "Add feature"`
 - Push and create a PR.
 
-#License
+**License**
 This project is licensed under the MIT License.
