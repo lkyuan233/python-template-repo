@@ -77,7 +77,7 @@ Returns:
 
     - bool: Success status.
 
-**Setup & Installation**
+# **Setup & Installation**
 
 1️⃣ **Clone the Repository**
 
@@ -109,7 +109,7 @@ AI model implementation (assumed external integration).
 Real-time message streaming.
 Advanced personalization beyond basic preferences.
 
-**Contributing**
+# **Contributing**
 
 - Fork the repo.
 - Create a new branch: `git checkout -b feature-name`
