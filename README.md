@@ -1,6 +1,6 @@
-**AI Conversation Client**
+# **AI Conversation Client**
 
-#Overview
+# **Overview**
 The AI Conversation Client is a lightweight Python module designed to facilitate interactions between users and an AI-powered chatbot. It provides methods for managing conversation sessions, exchanging messages, retrieving chat history, and setting user preferences.
 
 # **Features**
