@@ -2,7 +2,7 @@
 
 import pytest
 import logging
-from src.logger import logger_api  # ✅ Importing the Logger API
+from src.logger import logger_api
 
 @pytest.fixture
 def logger_instance() -> None:
@@ -16,5 +16,4 @@ def test_log_message(logger_instance, caplog) -> None:
     with caplog.at_level(logging.INFO):  #  Capture logs at INFO level
         logger_instance.log(test_message)
 
-    #  Check if the message appears in the captured logs
     assert test_message in caplog.text

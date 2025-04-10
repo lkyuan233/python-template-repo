@@ -1,6 +1,6 @@
 """Integration tests for Calculator, Logger, and Notifier components."""
 
-import logging  # ✅ Import logging to fix NameError
+import logging 
 from unittest.mock import Mock
 import pytest
 from pytest import LogCaptureFixture
@@ -36,18 +36,18 @@ class TestCalculatorLoggerIntegration:
         """Testing if basic calculator operations are performed and logged correctly."""
         calculator, logger, mock_notifier = setup_components
 
-        with caplog.at_level(logging.INFO):  # ✅ Best practice
+        with caplog.at_level(logging.INFO): 
             result = getattr(calculator, operation)(a, b)  # Perform calculation
             log_message = f"Operation: {operation} {a} and {b}. Result: {result}"
         
             logger.log(log_message)  # Log the operation
 
             assert result == expected
-            assert log_message in caplog.text  # Verify log message
+            assert log_message in caplog.text 
 
             if operation == "add" and expected > 10:  
-                mock_notifier.send_alert(expected)  # ✅ Actually call the function
-                mock_notifier.send_alert.assert_called_once_with(expected)  # ✅ Ensure alert is triggered
+                mock_notifier.send_alert(expected) 
+                mock_notifier.send_alert.assert_called_once_with(expected)  
 
     def test_calculator_logger_division(
         self, 
@@ -57,7 +57,7 @@ class TestCalculatorLoggerIntegration:
         """Testing division operation."""
         calculator, logger, _ = setup_components
 
-        with caplog.at_level(logging.INFO):  # ✅ Best practice
+        with caplog.at_level(logging.INFO): 
             result = calculator.divide(20, 5)
             expected_result = 4
             log_message = f"Operation: divide 20 and 5. Result: {result}"
@@ -75,7 +75,7 @@ class TestCalculatorLoggerIntegration:
         """Testing if division by zero error is caught and logged correctly."""
         calculator, logger, _ = setup_components
 
-        with caplog.at_level(logging.INFO):  # ✅ Best practice
+        with caplog.at_level(logging.INFO): 
             with pytest.raises(ValueError, match="Cannot divide by zero") as exc_info:
                 calculator.divide(10, 0)
 

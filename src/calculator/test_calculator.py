@@ -14,7 +14,7 @@ ZERO = 0
 @pytest.fixture
 def calculator() -> None:
     """Fixture to use the shared Calculator API instance."""
-    return calculator_api  # ✅ Use the API instead of creating a new instance
+    return calculator_api 
 
 def test_add(calculator) -> None:
     """Test addition of two numbers."""
