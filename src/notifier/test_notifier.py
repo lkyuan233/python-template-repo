@@ -22,5 +22,4 @@ def test_send_alert(notifier_instance, caplog) -> None:
     
     assert notifier_instance.send_alert(LOW_VALUE) == "Value is within the limit."
 
-    #  Check if the message appears in the captured logs
     assert f"Alert! Value {HIGH_VALUE} exceeds threshold {THRESHOLD}" in caplog.text
