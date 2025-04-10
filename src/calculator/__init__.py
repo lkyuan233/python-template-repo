@@ -1,13 +1,30 @@
 """Calculator module for performing basic arithmetic operations."""
 
+from abc import ABC, abstractmethod
 from .calculator import Calculator
 
-# Define module-level API
-calculator_api = Calculator()
+# Step 1: Define the interface for Calculator
+class ICalculator(ABC):
+    """Interface for a calculator component."""
 
-# Expose only necessary components
-__all__ = ["Calculator", "calculator_api"]
+    @abstractmethod
+    def add(self, a: float, b: float) -> float:
+        pass
 
-# Now calculator_api is accessible without creating an instance manually
-# Follows the guideline of defining an API
-# Improves usability across different components
+    @abstractmethod
+    def subtract(self, a: float, b: float) -> float:
+        pass
+
+    @abstractmethod
+    def multiply(self, a: float, b: float) -> float:
+        pass
+
+    @abstractmethod
+    def divide(self, a: float, b: float) -> float:
+        pass
+
+# Step 2: Provide a default implementation of the interface
+calculator_api: ICalculator = Calculator()
+
+# Step 3: Explicit API surface
+__all__ = ["ICalculator", "Calculator", "calculator_api"]

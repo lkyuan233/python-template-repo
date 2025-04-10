@@ -8,9 +8,25 @@ This project is structured into modular components, each handling a specific fun
 ```
 project_root/
 │── src/
-│   ├── calculator.py   # Provides basic arithmetic operations
-│   ├── logger.py       # Manages logging of operations
-│   ├── notifier.py     # Sends alerts when specified conditions are met
+│   ├── calculator   # Provides basic arithmetic operations
+        ├── __init__.py
+        ├── calculator.py
+        ├── pyproject.toml
+        ├── test_calculator.py
+│   ├── logger       # Manages logging of operations
+        ├── __init__.py
+        ├── logger.py
+        ├── pyproject.toml
+        ├── test_logger.py
+│   ├── notifier     # Sends alerts when specified conditions are met
+        ├── __init__.py
+        ├── notifier.py
+        ├── pyproject.toml
+        ├── test_notifier.py
+│── tests
+    ├── test_calculator_logger.py
+    ├── test_e2e.py
+    ├── test_logger_notifier.py
 │── components.md       # Documentation of project components
 │── README.md           # Project overview and setup instructions
 ```
