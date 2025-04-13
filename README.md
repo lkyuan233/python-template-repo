@@ -1,121 +1,140 @@
-# **AI Conversation Client**
+# AI Conversation Client
 
-# **Overview**
-The AI Conversation Client is a lightweight Python module designed to facilitate interactions between users and an AI-powered chatbot. It provides methods for managing conversation sessions, exchanging messages, retrieving chat history, and setting user preferences.
+## Overview
+The AI Conversation Client is a lightweight Python module that enables structured interactions between users and an AI chatbot powered by **Google Gemini (gemini-2.0-flash)**. It supports session management, message exchange, chat history, and user preferences — all via a simple HTTP integration.
 
-# **Features**
-1. **Send and receive messages:** Users can interact with the AI using a structured API.
-2. **Session management:** Start, retrieve, and end conversation sessions.
-3. **Chat history retrieval:** Access previous messages in an ongoing session.
-4. **User preferences:** Customize user settings for AI interactions.
+---
 
-# **API Reference**
+## Features
+1. **Send and receive messages** using Gemini API (\`v1beta\`).
+2. **Session management** to start and end conversations cleanly.
+3. **Chat history retrieval** with timestamped messages.
+4. **User preference support** for custom prompts or configurations.
 
-**AIConversationClient Class**
+---
 
-**Initialization**
-```sh
+## API Reference
+
+### AIConversationClient Class
+
+#### Initialization
+```python
 client = AIConversationClient()
 ```
 
-1. **send_message(session_id: str, message: str) -> dict**
-- Sends a message to the AI and returns a response.
+#### 1. \`send_message(session_id: str, message: str) -> dict\`
+Sends a message to the Gemini-powered AI and returns a structured response.
 
-Args:
+**Args:**
+- \`session_id\`: Unique identifier for the session.
+- \`message\`: User input.
 
-    - session_id (str): Unique session identifier.
-    
-    - message (str): User's message.
+**Returns:**
+- A \`dict\` containing the assistant’s message, role, timestamp, and ID.
 
-Returns:
+#### 2. \`get_chat_history(session_id: str) -> list\`
+Retrieves all messages from a session.
 
-    - dict: AI-generated reply.
+**Returns:**
+- A list of message dictionaries (user + assistant).
 
-2. **get_chat_history(session_id: str) -> list**
-- Retrieves chat history for a session.
+#### 3. \`set_user_preferences(user_id: str, preferences: dict) -> bool\`
+Stores preferences such as system prompts for a user.
 
-Args:
+#### 4. \`start_new_session(user_id: str) -> str\`
+Starts a new conversation session.
 
-    - session_id (str): Unique session identifier.
+**Returns:**
+- A new session ID.
 
-Returns:
+#### 5. \`end_session(session_id: str) -> bool\`
+Ends an active session and removes its history.
 
-    - list: A list of message dictionaries.
+---
 
-3. **set_user_preferences(user_id: str, preferences: dict) -> bool**
-- Updates user preferences for AI interactions.
+## Setup & Installation
 
-Args:
+### 1️⃣ Clone the Repository
 
-    - user_id (str): Unique user identifier.
-    
-    - preferences (dict): Dictionary of preferences.
-
-Returns:
-
-    - bool: Success status.
-
-4. **start_new_session(user_id: str) -> str**
-- Starts a new conversation session.
-
-Args:
-
-    - user_id (str): Unique user identifier.
-
-Returns:
-
-    - str: New session ID.
-    
-5. **end_session(session_id: str) -> bool**
-- Ends an active conversation session.
-
-Args:
-
-    - session_id (str): Unique session identifier.
-
-Returns:
-
-    - bool: Success status.
-
-# **Setup & Installation**
-
-1️⃣ **Clone the Repository**
-
-```sh
+```bash
 git clone https://github.com/lkyuan233/python-template-repo.git
 cd python-template-repo
-git checkout interface-definition
+git checkout hw3-implementation
 ```
 
-**Running Tests**
 
-Run tests with:
-```sh
+### 2️⃣ Add your \`.env\` in the **project root**:
+```env
+GEMINI_API_KEY=your_google_gemini_api_key_here
+```
+
+### 3️⃣ Install dependencies using [uv](https://github.com/astral-sh/uv)
+
+```bash
+uv pip install -r ai_conversation_client/requirements.txt
+```
+
+---
+
+## Usage
+
+### 🧠 Start a Chat Session
+```bash
+uv run ai_conversation_client/cli.py chat --user-id <user_id>
+```
+
+### 📜 View Chat History
+```bash
+uv run ai_conversation_client/cli.py history <session_id>
+```
+
+### 📋 List Active Sessions
+```bash
+uv run ai_conversation_client/cli.py list
+```
+
+---
+
+## Running Tests
+
+Run all tests (if present) using:
+
+```bash
 uv run pytest
 ```
 
-# **Project Scope**
+---
 
-**Minimum Viable Product (MVP)**
+## Project Scope
 
-Users can send messages and receive AI responses.
-Users can start and end conversation sessions.
-Chat history retrieval for a session.
-User preferences management.
+### ✅ Minimum Viable Product (MVP)
+- Send and receive messages via Gemini.
+- Start and end sessions.
+- View session history.
+- Store user preferences.
 
-**Out of Scope**
+### ❌ Out of Scope
+- Real-time message streaming.
+- Fine-grained personalization.
+- Custom AI models or embeddings.
 
-AI model implementation (assumed external integration).
-Real-time message streaming.
-Advanced personalization beyond basic preferences.
+---
 
-# **Contributing**
+## Contributing
 
-- Fork the repo.
-- Create a new branch: `git checkout -b feature-name`
-- Commit changes: `git commit -m "Add feature"`
-- Push and create a PR.
+1. Fork the repo.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Make and commit your changes:
+   ```bash
+   git commit -m "Add feature"
+   ```
+4. Push and open a PR.
 
-# **License**
+---
 
-This project is licensed under the MIT License.
+## License
+
+MIT License © 2025
