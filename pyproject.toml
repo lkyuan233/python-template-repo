@@ -11,7 +11,8 @@ dependencies = [
     "ruff",
     "mypy",
     "requests",
-    "python-dotenv"
+    "python-dotenv",
+    "google-generativeai"
 ]
 
 [tool.ruff]
