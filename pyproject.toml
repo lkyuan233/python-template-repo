@@ -11,6 +11,7 @@ dependencies = [
     "ruff",
     "mypy",
     "requests",
+    "python-dotenv"
 ]
 
 [tool.ruff]
