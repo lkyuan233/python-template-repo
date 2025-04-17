@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            uv pip install --system -r requirements.txt
+            uv pip install --system
             uv pip install --system -e .
 
       - run:
