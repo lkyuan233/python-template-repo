@@ -1,66 +1,20 @@
-class AIConversationClient:
-    def __init__(self):
-        """Initializes the AI conversation client."""
-        pass
+from ai_conversation_client.interface import IAIConversationClient
+
+class AIConversationClient(IAIConversationClient):
+    def __init__(self, api_client):
+        self.api_client = api_client
 
     def send_message(self, session_id: str, message: str) -> dict:
-        """
-        Sends a message to the AI and receives a response.
-
-        Args:
-            session_id (str): Unique ID for the conversation session.
-            message (str): The user's message.
-
-        Returns:
-            dict: A response containing the AI's reply.
-        """
-        pass
+        return self.api_client.send(session_id, message)
 
     def get_chat_history(self, session_id: str) -> list:
-        """
-        Retrieves the chat history for a given session.
-
-        Args:
-            session_id (str): Unique ID for the conversation session.
-
-        Returns:
-            list: A list of message dictionaries.
-        """
-        pass
+        return self.api_client.get_history(session_id)
 
     def set_user_preferences(self, user_id: str, preferences: dict) -> bool:
-        """
-        Updates user preferences for AI interactions.
-
-        Args:
-            user_id (str): Unique identifier for the user.
-            preferences (dict): A dictionary of user preferences.
-
-        Returns:
-            bool: True if preferences were updated successfully, False otherwise.
-        """
-        pass
+        return self.api_client.set_preferences(user_id, preferences)
 
     def start_new_session(self, user_id: str) -> str:
-        """
-        Starts a new conversation session.
-
-        Args:
-            user_id (str): Unique identifier for the user.
-
-        Returns:
-            str: The new session ID.
-        """
-        pass
+        return self.api_client.start_session(user_id)
 
     def end_session(self, session_id: str) -> bool:
-        """
-        Ends an active conversation session.
-
-        Args:
-            session_id (str): Unique ID for the conversation session.
-
-        Returns:
-            bool: True if the session ended successfully, False otherwise.
-        """
-        pass
+        return self.api_client.end_session(session_id)
