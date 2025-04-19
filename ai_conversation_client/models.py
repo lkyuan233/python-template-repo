@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 @dataclass
 class Message:
@@ -8,4 +9,4 @@ class Message:
 @dataclass
 class UserPreferences:
     user_id: str
-    preferences: dict
+    preferences: dict[str, Any]
