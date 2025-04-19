@@ -1,20 +1,9 @@
 import pytest
-from unittest.mock import MagicMock
-from ai_conversation_client.client import AIConversationClient
-
+from tests.dummy_client import DummyAIClient
 
 @pytest.fixture
 def client():
-    client = AIConversationClient()
-
-    # Mock the methods to return fake valid outputs
-    client.send_message = MagicMock(return_value={"reply": "Hello there!"})
-    client.get_chat_history = MagicMock(return_value=[{"sender": "user", "text": "Hi"}])
-    client.set_user_preferences = MagicMock(return_value=True)
-    client.start_new_session = MagicMock(return_value="session_abc123")
-    client.end_session = MagicMock(return_value=True)
-
-    return client
+    return DummyAIClient()
 
 def test_send_message(client):
     response = client.send_message("session_123", "Hello")
