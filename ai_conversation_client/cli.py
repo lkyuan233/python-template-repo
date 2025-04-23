@@ -8,7 +8,7 @@ import asyncio
 from ai_conversation_client.client import AIConversationClient
 
 
-async def interactive_chat(client: AIConversationClient, user_id: str):
+async def interactive_chat(client: AIConversationClient, user_id: str)-> None:
     session_id = client.start_new_session(user_id)
     print(f"New session started. Session ID: {session_id}")
     print("Type 'exit' to quit.\n")
@@ -32,11 +32,11 @@ async def interactive_chat(client: AIConversationClient, user_id: str):
             print(f"Error: {e}")
 
 
-def list_sessions(client: AIConversationClient):
+def list_sessions(client: AIConversationClient) -> None:
     print("Session listing is not implemented for the generic interface.")
 
 
-def show_history(client: AIConversationClient, session_id: str):
+def show_history(client: AIConversationClient, session_id: str) -> None:
     try:
         history = client.get_chat_history(session_id)
         if not history:
@@ -48,7 +48,7 @@ def show_history(client: AIConversationClient, session_id: str):
         print(f"Error: {e}")
 
 
-async def run_cli(client: AIConversationClient):
+async def run_cli(client: AIConversationClient) -> None:
     parser = argparse.ArgumentParser(description="AI Conversation CLI")
     subparsers = parser.add_subparsers(dest="command")
 

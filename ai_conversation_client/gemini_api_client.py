@@ -1,12 +1,25 @@
 import os
 import uuid
 import requests
-from typing import Any
+from typing import Any, TYPE_CHECKING, Protocol
 from dotenv import load_dotenv
-import google.generativeai as genai
+import importlib
 
 from ai_conversation_client.interface import APIClientProtocol
 from ai_conversation_client.conversation import Conversation, Message, MessageRole
+
+# MyPy-safe dynamic typing for Gemini SDK
+if TYPE_CHECKING:
+    class GenerativeModelConstructor(Protocol):
+        def __call__(self, model_name: str) -> Any: ...
+        def start_chat(self, history: list[Any]) -> Any: ...
+else:
+    GenerativeModelConstructor = Any
+
+# Dynamic import that works at runtime
+genai = importlib.import_module("google.generativeai")
+genai_configure: Any = getattr(genai, "configure")
+genai_model_class: GenerativeModelConstructor = getattr(genai, "GenerativeModel")
 
 load_dotenv()
 
@@ -16,12 +29,16 @@ class GeminiAPIClient(APIClientProtocol):
         if not self._api_key:
             raise ValueError("Missing GEMINI_API_KEY in .env file")
 
-        genai.configure(api_key=self._api_key)
-        self._model = genai.GenerativeModel("gemini-pro")
-        self._model_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={self._api_key}"
+        genai_configure(api_key=self._api_key)
+        self._model: Any = genai_model_class("gemini-pro")
+
+        self._model_url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-2.0-flash:generateContent?key={self._api_key}"
+        )
 
         self._sessions: dict[str, Conversation] = {}
-        self._chat_sessions: dict[str, genai.ChatSession] = {}
+        self._chat_sessions: dict[str, Any] = {}
         self._user_preferences: dict[str, dict[str, Any]] = {}
 
     def send(self, session_id: str, message: str) -> dict[str, Any]:
@@ -32,7 +49,8 @@ class GeminiAPIClient(APIClientProtocol):
         convo.add_message(Message(message, MessageRole.USER))
 
         history = "\n".join(
-            f"{msg.role.value.capitalize()}: {msg.content}" for msg in convo.messages
+            f"{msg.role.value.capitalize()}: {msg.content}"
+            for msg in convo.messages
         )
 
         payload = {
