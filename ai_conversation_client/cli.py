@@ -3,8 +3,8 @@
 Command-line interface for the AI Conversation Client.
 """
 
-import asyncio
 import argparse
+import asyncio
 from ai_conversation_client.client import AIConversationClient
 
 
@@ -13,8 +13,13 @@ async def interactive_chat(client: AIConversationClient, user_id: str):
     print(f"New session started. Session ID: {session_id}")
     print("Type 'exit' to quit.\n")
 
+    loop = asyncio.get_event_loop()
+
     while True:
-        user_input = input("You: ").strip()
+        # Non-blocking input (fixes Windows + asyncio conflict)
+        user_input = await loop.run_in_executor(None, input, "You: ")
+        user_input = user_input.strip()
+
         if user_input.lower() in {"exit", "quit"}:
             print("Ending session...")
             client.end_session(session_id)
@@ -65,4 +70,11 @@ async def run_cli(client: AIConversationClient):
         list_sessions(client)
     else:
         parser.print_help()
+if __name__ == "__main__":
+    import asyncio
+    from ai_conversation_client.client import AIConversationClient
+    from ai_conversation_client.gemini_api_client import GeminiAPIClient
 
+    api_client = GeminiAPIClient()
+    client = AIConversationClient(api_client)
+    asyncio.run(run_cli(client))
