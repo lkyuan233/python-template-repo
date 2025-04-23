@@ -32,7 +32,10 @@ jobs:
           name: Run Ruff Linting
           command: |
             ruff check .
-
+      - run:
+          name: Install mypy stubs
+          command: |
+            uv pip install --system types-requests
       - run:
           name: Run Mypy Type Checking
           command: |
