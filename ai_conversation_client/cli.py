@@ -3,40 +3,40 @@
 Command-line interface for the AI Conversation Client.
 """
 
-import asyncio
 import argparse
-import os
-import sys
-from dotenv import load_dotenv
+import asyncio
+from ai_conversation_client.client import AIConversationClient
 
-sys.path.insert(0, os.path.abspath('..'))
-from ai_conversation_client import AIConversationClient
 
-async def interactive_chat(client: AIConversationClient, user_id: str):
-    """Starts an interactive chat session with the AI."""
+async def interactive_chat(client: AIConversationClient, user_id: str)-> None:
     session_id = client.start_new_session(user_id)
     print(f"New session started. Session ID: {session_id}")
     print("Type 'exit' to quit.\n")
 
+    loop = asyncio.get_event_loop()
+
     while True:
-        user_input = input("You: ").strip()
+        # Non-blocking input (fixes Windows + asyncio conflict)
+        user_input = await loop.run_in_executor(None, input, "You: ")
+        user_input = user_input.strip()
+
         if user_input.lower() in {"exit", "quit"}:
             print("Ending session...")
             client.end_session(session_id)
             break
 
         try:
-            response = await client.send_message(session_id, user_input)
+            response = client.send_message(session_id, user_input)
             print(f"AI: {response['content']}")
         except Exception as e:
             print(f"Error: {e}")
 
-def list_sessions(client: AIConversationClient):
-    print("Available session IDs:")
-    for session_id in client._sessions.keys():
-        print(f" - {session_id}")
 
-def show_history(client: AIConversationClient, session_id: str):
+def list_sessions(client: AIConversationClient) -> None:
+    print("Session listing is not implemented for the generic interface.")
+
+
+def show_history(client: AIConversationClient, session_id: str) -> None:
     try:
         history = client.get_chat_history(session_id)
         if not history:
@@ -47,13 +47,8 @@ def show_history(client: AIConversationClient, session_id: str):
     except Exception as e:
         print(f"Error: {e}")
 
-async def main():
-    load_dotenv()
 
-    if not os.getenv("GEMINI_API_KEY"):
-        print("Error: GEMINI_API_KEY is not set.")
-        return
-
+async def run_cli(client: AIConversationClient) -> None:
     parser = argparse.ArgumentParser(description="AI Conversation CLI")
     subparsers = parser.add_subparsers(dest="command")
 
@@ -66,7 +61,6 @@ async def main():
     subparsers.add_parser("list", help="List active session IDs")
 
     args = parser.parse_args()
-    client = AIConversationClient()
 
     if args.command == "chat":
         await interactive_chat(client, args.user_id)
@@ -76,6 +70,11 @@ async def main():
         list_sessions(client)
     else:
         parser.print_help()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    import asyncio
+    from ai_conversation_client.client import AIConversationClient
+    from ai_conversation_client.gemini_api_client import GeminiAPIClient
+
+    api_client = GeminiAPIClient()
+    client = AIConversationClient(api_client)
+    asyncio.run(run_cli(client))
