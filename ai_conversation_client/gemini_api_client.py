@@ -3,7 +3,7 @@ import uuid
 import requests
 from typing import Any
 from dotenv import load_dotenv
-import google.generativeai as genai
+import google.generativeai as genai  # type: ignore
 
 from ai_conversation_client.interface import APIClientProtocol
 from ai_conversation_client.conversation import Conversation, Message, MessageRole
@@ -16,12 +16,15 @@ class GeminiAPIClient(APIClientProtocol):
         if not self._api_key:
             raise ValueError("Missing GEMINI_API_KEY in .env file")
 
-        genai.configure(api_key=self._api_key)
-        self._model = genai.GenerativeModel("gemini-pro")
-        self._model_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={self._api_key}"
+        genai.configure(api_key=self._api_key)  # type: ignore
+        self._model = genai.GenerativeModel("gemini-pro")  # type: ignore
+        self._model_url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-2.0-flash:generateContent?key={self._api_key}"
+        )
 
         self._sessions: dict[str, Conversation] = {}
-        self._chat_sessions: dict[str, genai.ChatSession] = {}
+        self._chat_sessions: dict[str, Any] = {}  # Can't type without stub
         self._user_preferences: dict[str, dict[str, Any]] = {}
 
     def send(self, session_id: str, message: str) -> dict[str, Any]:
@@ -82,7 +85,7 @@ class GeminiAPIClient(APIClientProtocol):
         prompt = self._user_preferences.get(user_id, {}).get("system_prompt")
         convo = Conversation(conversation_id=session_id, system_prompt=prompt)
         self._sessions[session_id] = convo
-        self._chat_sessions[session_id] = self._model.start_chat(history=[])
+        self._chat_sessions[session_id] = self._model.start_chat(history=[])  # type: ignore
         return session_id
 
     def end_session(self, session_id: str) -> bool:
