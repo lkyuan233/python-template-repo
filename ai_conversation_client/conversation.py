@@ -1,17 +1,22 @@
+import uuid
 from enum import Enum
 from datetime import datetime
 from typing import List, Dict, Optional, Any
-import uuid
 
 class MessageRole(Enum):
-    SYSTEM = "system"
     USER = "user"
-    ASSISTANT = "assistant"
+    SYSTEM = "system"
     FUNCTION = "function"
+    ASSISTANT = "assistant"
 
 class Message:
-    def __init__(self, content: str, role: MessageRole = MessageRole.USER,
-                 message_id: Optional[str] = None, timestamp: Optional[datetime] = None):
+    def __init__(
+        self,
+        content: str,
+        role: MessageRole = MessageRole.USER,
+        message_id: Optional[str] = None,
+        timestamp: Optional[datetime] = None
+    ):
         self._content = content
         self._role = role
         self._id = message_id or f"msg_{uuid.uuid4().hex[:8]}"
@@ -38,27 +43,29 @@ class Message:
             "role": self._role.value,
             "content": self._content
         }
-
+    
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Message':
-        role = MessageRole(data.get("role", "user"))
-        content = data.get("content", "")
-        message_id = data.get("id")
         timestamp_str = data.get("timestamp")
+        try:
+            timestamp = datetime.fromisoformat(timestamp_str) if timestamp_str else None
+        except ValueError:
+            timestamp = datetime.now()
 
-        timestamp = None
-        if timestamp_str:
-            try:
-                timestamp = datetime.fromisoformat(timestamp_str)
-            except ValueError:
-                timestamp = datetime.now()
-
-        return cls(content, role, message_id, timestamp)
+        return cls(
+            content=data.get("content", ""),
+            role=MessageRole(data.get("role", "user")),
+            message_id=data.get("id"),
+            timestamp=timestamp
+        )
 
 class Conversation:
-    def __init__(self, conversation_id: Optional[str] = None,
-                 title: Optional[str] = None,
-                 system_prompt: Optional[str] = None):
+    def __init__(
+        self,
+        conversation_id: Optional[str] = None,
+        title: Optional[str] = None,
+        system_prompt: Optional[str] = None
+    ):
         self._id = conversation_id or f"conv_{uuid.uuid4().hex[:8]}"
         self._title = title or f"Conversation {self._id}"
         self._messages: List[Message] = []
@@ -101,24 +108,12 @@ class Conversation:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Conversation':
-        conversation_id = data.get("id")
-        title = data.get("title")
-        conversation = cls(conversation_id, title)
+        conversation = cls(
+            conversation_id=data.get("id"),
+            title=data.get("title")
+        )
 
         for msg_data in data.get("messages", []):
-            role = MessageRole(msg_data.get("role", "user"))
-            content = msg_data.get("content", "")
-            message_id = msg_data.get("id")
-
-            timestamp = None
-            timestamp_str = msg_data.get("timestamp")
-            if timestamp_str:
-                try:
-                    timestamp = datetime.fromisoformat(timestamp_str)
-                except ValueError:
-                    timestamp = datetime.now()
-
-            message = Message(content, role, message_id, timestamp)
-            conversation.add_message(message)
+            conversation.add_message(Message.from_dict(msg_data))
 
         return conversation
