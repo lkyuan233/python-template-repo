@@ -54,6 +54,18 @@ Ends an active session and removes its history.
 
 ## Setup & Installation
 
+**Setting PYTHONPATH**
+
+For Windows use the following command:
+```sh
+set PYTHONPATH=%CD%
+```
+
+For MacOS use the following command:
+```sh
+export PYTHONPATH=$(pwd)
+```
+
 ### 1️⃣ Clone the Repository
 
 ```bash
@@ -64,14 +76,16 @@ git checkout hw3-implementation
 
 
 ### 2️⃣ Add your \`.env\` in the **project root**:
+
 ```env
 GEMINI_API_KEY=your_google_gemini_api_key_here
 ```
 
-### 3️⃣ Install dependencies using [uv](https://github.com/astral-sh/uv)
+### 3️⃣ Install dependencies and dev dependencies using [uv](https://github.com/astral-sh/uv)
 
 ```bash
-uv pip install -r ai_conversation_client/requirements.txt
+uv pip install -r pyproject.toml
+uv sync --group dev
 ```
 
 ---
