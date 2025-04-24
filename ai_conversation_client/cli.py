@@ -105,7 +105,6 @@ async def run_cli(client: AIConversationClient) -> None:
     else:
         parser.print_help()
 
-
 if __name__ == "__main__":
     import asyncio
     from ai_conversation_client.client import AIConversationClient
