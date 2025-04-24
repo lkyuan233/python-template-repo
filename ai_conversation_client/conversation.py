@@ -4,12 +4,18 @@ from typing import List, Dict, Optional, Any
 import uuid
 
 class MessageRole(Enum):
+    """
+    Enum for message roles in a conversation.
+    """
     SYSTEM = "system"
     USER = "user"
     ASSISTANT = "assistant"
     FUNCTION = "function"
 
 class Message:
+    """
+    Represents a single message in a conversation.
+    """
     def __init__(self, content: str, role: MessageRole = MessageRole.USER,
                  message_id: Optional[str] = None, timestamp: Optional[datetime] = None):
         self._content = content
@@ -56,6 +62,9 @@ class Message:
         return cls(content, role, message_id, timestamp)
 
 class Conversation:
+    """
+    Represents a conversation session.
+    """
     def __init__(self, conversation_id: Optional[str] = None,
                  title: Optional[str] = None,
                  system_prompt: Optional[str] = None):
