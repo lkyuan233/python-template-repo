@@ -25,7 +25,20 @@ genai_model_class: GenerativeModelConstructor = getattr(genai, "GenerativeModel"
 load_dotenv()
 
 class GeminiAPIClient(IAIConversationClient):
+    """
+    GeminiAPIClient is an implementation of IAIConversationClient that interfaces with
+    Google's Gemini 2.0 API to handle AI chat interactions.
+
+    It manages sessions, messages, user preferences, and generates assistant responses.
+    """
+
     def __init__(self) -> None:
+        """
+        Initializes the GeminiAPIClient.
+
+        Loads the Gemini API key from the environment, configures the SDK, 
+        and prepares model and session tracking.
+        """
         self._api_key = os.getenv("GEMINI_API_KEY")
         
         if not self._api_key:
@@ -44,6 +57,20 @@ class GeminiAPIClient(IAIConversationClient):
         self._user_preferences: dict[str, dict[str, Any]] = {}
 
     def send_message(self, session_id: str, message: str) -> dict[str, Any]:
+        """
+        Sends a message from the user and returns the AI's response.
+
+        Args:
+            session_id (str): The unique identifier for the session.
+            message (str): The user's message content.
+
+        Returns:
+            dict: Contains the assistant's message with ID, role, content, and timestamp.
+
+        Raises:
+            ValueError: If the session ID is not found.
+            RuntimeError: If the Gemini API call fails.
+        """
         if session_id not in self._sessions:
             raise ValueError("Session not found")
 
@@ -75,6 +102,15 @@ class GeminiAPIClient(IAIConversationClient):
             raise RuntimeError(f"Gemini API error: {e}")
 
     def get_chat_history(self, session_id: str) -> list[dict[str, Any]]:
+        """
+        Returns the full chat history for a given session.
+
+        Args:
+            session_id (str): The unique identifier for the session.
+
+        Returns:
+            list[dict]: List of message dictionaries with ID, role, content, and timestamp.
+        """
         if session_id not in self._sessions:
             return []
         
@@ -89,10 +125,29 @@ class GeminiAPIClient(IAIConversationClient):
         ]
 
     def set_user_preferences(self, user_id: str, preferences: dict[str, Any]) -> bool:
+        """
+        Stores user-specific preferences (e.g., system prompt).
+
+        Args:
+            user_id (str): The unique identifier for the user.
+            preferences (dict): A dictionary of user preferences.
+
+        Returns:
+            bool: Always returns True.
+        """
         self._user_preferences[user_id] = preferences
         return True
 
     def start_new_session(self, user_id: str) -> str:
+        """
+        Starts a new conversation session for a user.
+
+        Args:
+            user_id (str): The user's unique ID.
+
+        Returns:
+            str: The generated session ID.
+        """
         session_id = f"sess_{uuid.uuid4().hex[:8]}"
         prompt = self._user_preferences.get(user_id, {}).get("system_prompt")
         convo = Conversation(conversation_id=session_id, system_prompt=prompt)
@@ -101,6 +156,15 @@ class GeminiAPIClient(IAIConversationClient):
         return session_id
 
     def end_session(self, session_id: str) -> bool:
+        """
+        Ends and cleans up a session.
+
+        Args:
+            session_id (str): The ID of the session to end.
+
+        Returns:
+            bool: Always returns True.
+        """
         self._sessions.pop(session_id, None)
         self._chat_sessions.pop(session_id, None)
         return True
