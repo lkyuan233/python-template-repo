@@ -4,7 +4,6 @@ import requests
 import importlib
 from dotenv import load_dotenv
 from typing import Any, TYPE_CHECKING, Protocol
-
 from ai_conversation_client.interface import IAIConversationClient
 from ai_conversation_client.conversation import Conversation, Message, MessageRole
 

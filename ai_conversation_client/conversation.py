@@ -3,7 +3,6 @@ from enum import Enum
 from datetime import datetime
 from typing import List, Dict, Optional, Any
 
-
 class MessageRole(Enum):
     """
     Enum representing the role of a message sender.
@@ -12,7 +11,6 @@ class MessageRole(Enum):
     SYSTEM = "system"
     FUNCTION = "function"
     ASSISTANT = "assistant"
-
 
 class Message:
     """
@@ -110,7 +108,6 @@ class Message:
             message_id=data.get("id"),
             timestamp=timestamp
         )
-
 
 class Conversation:
     """

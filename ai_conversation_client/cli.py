@@ -10,7 +10,6 @@ import argparse
 import asyncio
 from ai_conversation_client.client import AIConversationClient
 
-
 async def interactive_chat(client: AIConversationClient, user_id: str) -> None:
     """
     Start an interactive chat loop with the AI assistant for a given user.
@@ -41,7 +40,6 @@ async def interactive_chat(client: AIConversationClient, user_id: str) -> None:
         except Exception as e:
             print(f"Error: {e}")
 
-
 def list_sessions(client: AIConversationClient) -> None:
     """
     Placeholder function to list sessions.
@@ -50,7 +48,6 @@ def list_sessions(client: AIConversationClient) -> None:
         client (AIConversationClient): The conversation client instance.
     """
     print("Session listing is not implemented for the generic interface.")
-
 
 def show_history(client: AIConversationClient, session_id: str) -> None:
     """
@@ -70,7 +67,6 @@ def show_history(client: AIConversationClient, session_id: str) -> None:
             print(f"[{msg['timestamp']}] {msg['role'].capitalize()}: {msg['content']}")
     except Exception as e:
         print(f"Error: {e}")
-
 
 async def run_cli(client: AIConversationClient) -> None:
     """
