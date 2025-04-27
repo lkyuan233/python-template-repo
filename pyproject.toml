@@ -22,6 +22,9 @@ exclude = ["tests/snapshots"]
 [tool.mypy]
 strict = true
 
+[tool.uv.workspace]
+members = ["mail_api", "mail_gmail_impl"]
+
 [dependency-groups]
 dev = [
     "types-requests>=2.32.0.20250328",
