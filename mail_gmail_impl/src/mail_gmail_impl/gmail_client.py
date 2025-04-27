@@ -73,7 +73,7 @@ class GmailClient(Client):
             results = (
                 self.service.users()
                 .messages()
-                .list(userId="me", maxResults=50, labelIds=["INBOX"])
+                .list(userId="me", maxResults=10, labelIds=["INBOX"])
                 .execute()
             )
             messages = results.get("messages", [])
