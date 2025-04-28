@@ -1,4 +1,4 @@
-from mail_api import Message
+from mail_client.interface import Message
 import html2text  # type: ignore
 import logging
 

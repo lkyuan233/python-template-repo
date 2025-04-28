@@ -1,4 +1,4 @@
-from mail_api import Client, Message, Attachment
+from mail_client.interface import Client, Message, Attachment
 from typing import Iterator, Optional
 import os.path
 import base64

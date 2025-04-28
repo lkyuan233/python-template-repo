@@ -1,6 +1,6 @@
 """Gmail implementation of mail_api interfaces."""
 
-from mail_api import Message, Attachment, Client, create_attachment
+from mail_client.interface import Message, Attachment, Client, create_attachment
 from .gmail_client import GmailClient
 from .gmail_message import GmailMessage
 from .gmail_attachment import GmailAttachment

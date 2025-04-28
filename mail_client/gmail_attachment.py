@@ -1,4 +1,4 @@
-from mail_api import Attachment
+from mail_client.interface import Attachment
 import base64
 import binascii
 import mimetypes

@@ -1,61 +1,49 @@
-# import asyncio
-# from ai_conversation_client.cli import run_cli
-# from ai_conversation_client.client import AIConversationClient
-from ai_conversation_client.gemini_api_client import GeminiAPIClient
-
-# def main() -> None:
-#     gemini_backend = GeminiAPIClient()
-#     client = AIConversationClient(api_client=gemini_backend)
-#     asyncio.run(run_cli(client))
-
-# if __name__ == "__main__":
-#     main()
-
-# import asyncio
-# from ai_conversation_client.cli import run_cli
-# from ai_conversation_client.client import AIConversationClient
-# from ai_conversation_client.gemini_api_client import GeminiAPIClient
-
-# def main() -> None:
-#     gemini_backend = GeminiAPIClient()
-#     client = AIConversationClient(api_client=gemini_backend)
-#     asyncio.run(run_cli(client))
-
-# if __name__ == "__main__":
-#     main()
-
 import csv
 import logging
+import re  # 🆕 import regex module
 
-from mail_gmail_impl.src.mail_gmail_impl import get_gmail_client
+from mail_client.factories import get_gmail_client  # ✅ Fixed import
 from ai_conversation_client.client import AIConversationClient
+from ai_conversation_client.gemini_api_client import GeminiAPIClient
 
 def fetch_emails(mail_client):
     """Fetch emails using the mail client."""
     emails = []
     for message in mail_client.get_messages():
         emails.append({
-            "id": message.id,         # each message has an id
+            "id": message.id,
             "subject": message.subject,
-            "body": message.body
+            "body": message.body,
         })
     return emails
 
+def sanitize_email_content(email_body):
+    """Sanitize email body to protect user privacy."""
+    # Return a placeholder instead of real email content
+    return "[Email body hidden for privacy]"
+
 def analyze_email(ai_client, session_id, email_body):
-    """Send email content to AI client and get spam probability."""
-    # prompt = f"Analyze this email carefully and give me only a number between 0 and 100.\nWhat is the % probability that this email is spam?\n\nEmail Content:\n{email_body}"
+    """Send sanitized email content to AI client and get spam probability."""
+    sanitized_body = sanitize_email_content(email_body)  # 🛡️ Sanitize before sending to AI
+
     prompt = f"""
-    Given the following parsed email content, rate how much it appears to be spam by giving it a score between 1 and 10 (it can be a decimal value), with 10 being the most likely that the content is spam. \nYour response should only contain the score with no additional text, this is very important.\n\nEmail Content:\n{email_body}
+    Given the following parsed email content, rate how much it appears to be spam by giving it a score between 1 and 10 (it can be a decimal value), with 10 being the most likely that the content is spam.
+    Your response should only contain the score with no additional text, this is very important.
+
+    Email Content:
+    {sanitized_body}
     """
     
     response = ai_client.send_message(session_id=session_id, message=prompt)
     print(response)
-    # Expect response like {'content': '7', 'role': 'assistant', 'timestamp': '...', 'id': '...'}
+
     ai_message = response.get("content", "")
-    
-    try:
-        spam_probability = float(ai_message.strip())
-    except ValueError:
+
+    # 🆕 New: Try extracting the first number found in the AI message using regex
+    match = re.search(r'\d+(\.\d+)?', ai_message)
+    if match:
+        spam_probability = float(match.group())
+    else:
         logging.warning(f"Could not parse spam probability from response: {ai_message}")
         spam_probability = 0.0  # Default to 0 if parsing fails
 
@@ -80,12 +68,11 @@ def main():
     gmail_client = get_gmail_client()
 
     # Initialize AI conversation client
-    # ai_client = AIConversationClient()
     gemini_backend = GeminiAPIClient()
     ai_client = AIConversationClient(api_client=gemini_backend)
     
     # Start a session for AI Conversation Client
-    user_id = "integration_user"  # arbitrary
+    user_id = "integration_user"  # arbitrary user ID
     session_id = ai_client.start_new_session(user_id=user_id)
     
     logging.info(f"Started AI conversation session: {session_id}")
