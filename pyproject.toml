@@ -30,3 +30,6 @@ strict = true
 
 [dependency-groups]
 dev = ["types-requests>=2.32.0.20250328"]
+
+[tool.setuptools]
+packages = ["mail_client", "ai_conversation_client"]
