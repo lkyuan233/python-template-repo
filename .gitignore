@@ -169,3 +169,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ruff cache
+.ruff_cache
+
+# Gmail api client files
+credentials.json
+
+token.json
+
+output.csv
