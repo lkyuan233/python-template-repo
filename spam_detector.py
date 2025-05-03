@@ -3,7 +3,7 @@
 import re
 import logging
 import csv
-from typing import List, Dict, Protocol, Any, TypedDict
+from typing import List, Dict, Protocol, TypedDict
 
 class Email:
     id: str
