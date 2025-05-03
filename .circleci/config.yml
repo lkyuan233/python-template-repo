@@ -42,8 +42,10 @@ jobs:
           name: Run Mypy Type Checking
           command: |
             source $BASH_ENV
-            echo "Running mypy..."
-            mypy . --pretty --show-error-context --show-column-numbers | tee test-results/mypy-output.log
+            echo "=== MYPY START ==="
+            mypy --version
+            mypy main.py mail_client ai_conversation_client tests --pretty --show-error-context --show-column-numbers | tee test-results/mypy-output.log
+            echo "=== MYPY END ==="
 
       - run:
           name: Verify Tests Exist
@@ -76,7 +78,11 @@ jobs:
           path: test-results/output.log
 
       - store_artifacts:
+          path: test-results/mypy-output.
+
+      - store_artifacts:
           path: test-results/mypy-output.log
+
 
 workflows:
   version: 2
