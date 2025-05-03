@@ -42,7 +42,8 @@ jobs:
           name: Run Mypy Type Checking
           command: |
             source $BASH_ENV
-            mypy ai_conversation_client tests --show-error-context --show-column-numbers --pretty
+            echo "Running mypy..."
+            mypy . --pretty --show-error-context --show-column-numbers | tee test-results/mypy-output.log
 
       - run:
           name: Verify Tests Exist
@@ -73,6 +74,9 @@ jobs:
 
       - store_artifacts:
           path: test-results/output.log
+
+      - store_artifacts:
+          path: test-results/mypy-output.log
 
 workflows:
   version: 2
