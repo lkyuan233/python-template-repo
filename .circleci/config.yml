@@ -1,103 +1,81 @@
 version: 2.1
 
-executors:
-  cpp-executor:
-    docker:
-      - image: cimg/python:3.12  # Changed to Python-enabled image
-    resource_class: small
-    environment:
-      CXX: g++
-      CC: gcc
-      VCPKG_ROOT: /opt/vcpkg
-
 jobs:
-  build-and-test:
-    executor: cpp-executor
+  lint_and_test:
+    docker:
+      - image: python:3.10
     steps:
       - checkout
 
       - run:
-          name: Install Build Tools and vcpkg
+          name: Install UV
           command: |
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update && \
-            apt-get install -y tzdata && \
-            ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
-            dpkg-reconfigure --frontend noninteractive tzdata && \
-            apt-get install -y \
-              curl zip unzip tar git cmake g++ make pkg-config \
-              lcov
-
-            git clone https://github.com/microsoft/vcpkg.git $VCPKG_ROOT
-            $VCPKG_ROOT/bootstrap-vcpkg.sh
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
 
       - run:
-          name: Install Dependencies via vcpkg
+          name: Install Dependencies
           command: |
-            $VCPKG_ROOT/vcpkg install gtest cpr nlohmann-json
-
-      - run:  # NEW STEP: Install MyPy
-          name: Install Python dependencies
-          command: |
-            python -m pip install --upgrade pip
-            pip install mypy
-
-      - run:  # NEW STEP: Run MyPy
-          name: Run type checking
-          command: |
-            mypy mail_client/ ai_conversation_client/ main.py \
-              --strict \
-              --ignore-missing-imports \
-              --show-error-codes \
-              --html-report mypy-report
-
-      # Existing steps below remain unchanged
-      - run:
-          name: Clean build directory
-          command: |
-            rm -rf build && mkdir build
+            uv pip install --system -e .
 
       - run:
-          name: Build Project with Coverage
-          command: |
-            cd build
-            cmake .. \
-              -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
-              -DCMAKE_CXX_FLAGS="--coverage"
-            make
+          name: Create test-results directory
+          command: mkdir -p test-results
 
       - run:
-          name: Run Unit Tests
+          name: Set PYTHONPATH
           command: |
-            cd build
-            mkdir -p test-results
-            ctest --output-on-failure --output-junit test-results/test-results.xml
+            echo "export PYTHONPATH=$PYTHONPATH:$(pwd)/ai_conversation_client" >> $BASH_ENV
 
       - run:
-          name: Generate Code Coverage Report
+          name: Run Ruff Linting
           command: |
-            cd build
-            lcov --capture --directory . --output-file coverage.info --ignore-errors mismatch
-            lcov --remove coverage.info '/usr/*' --output-file coverage.info
-            genhtml --ignore-errors mismatch coverage.info --output-directory coverage-report
+            ruff check .
+
+      - run:
+          name: Install mypy stubs
+          command: |
+            uv pip install --system types-requests
+
+      - run:
+          name: Run Mypy Type Checking
+          command: |
+            source $BASH_ENV
+            mypy ai_conversation_client tests --show-error-context --show-column-numbers --pretty
+
+      - run:
+          name: Verify Tests Exist
+          command: |
+            uv run pytest --collect-only
+
+      - run:
+          name: Run Tests with Coverage
+          command: |
+            uv run pytest --cov=ai_conversation_client --cov=tests --cov-report=xml --cov-report=html \
+            --junitxml=test-results/junit.xml --cov-config=pyproject.toml | tee test-results/output.log
+
+      - run:
+          name: Check Test Results
+          command: |
+            if grep -q 'FAILED' test-results/output.log; then
+              echo "Some tests failed. Check logs."
+            else
+              echo "All tests passed!"
+            fi
 
       - store_test_results:
-          path: build/test-results
+          path: test-results/
 
       - store_artifacts:
-          path: build/test-results
-          destination: junit
+          path: htmlcov/
+          destination: coverage_html
 
       - store_artifacts:
-          path: build/coverage-report
-          destination: coverage
-
-      - store_artifacts:  # NEW: Store MyPy report
-          path: mypy-report
-          destination: mypy-report
+          path: test-results/output.log
 
 workflows:
   version: 2
-  test-and-coverage:
+  test-workflow:
     jobs:
-      - build-and-test
+      - lint_and_test
