@@ -29,6 +29,11 @@ jobs:
             echo "export PYTHONPATH=$PYTHONPATH:$(pwd)/ai_conversation_client" >> $BASH_ENV
 
       - run:
+          name: Run Ruff Linting
+          command: |
+            ruff check .
+
+      - run:
           name: Install mypy stubs
           command: |
             uv pip install --system types-requests
