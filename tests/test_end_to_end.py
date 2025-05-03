@@ -1,4 +1,3 @@
-import os
 import csv
 from spam_detector import process_emails, save_results_to_csv
 
