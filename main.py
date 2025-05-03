@@ -2,7 +2,7 @@
 
 import base64
 import logging
-from typing import List, Dict, Optional, Any, Generator
+from typing import List, Dict, Any
 from googleapiclient.discovery import Resource
 from googleapiclient.errors import HttpError
 
