@@ -1,4 +1,3 @@
-import re
 import pytest
 from typing import Dict, Any
 
