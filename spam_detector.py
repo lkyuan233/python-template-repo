@@ -2,7 +2,7 @@ import re
 import logging
 import csv
 from typing import List, Dict, TypedDict, Protocol
-from mail_client.interface import Message as Email, MailClient
+from mail_client.interface import MailClient
 
 
 # AI Client protocol for interacting with LLMs
