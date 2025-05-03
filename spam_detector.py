@@ -1,30 +1,21 @@
-# spam_detector/spam_detector.py
-
 import re
 import logging
 import csv
-from typing import List, Dict, Protocol, TypedDict
-from dataclasses import dataclass
+from typing import List, Dict, TypedDict, Protocol
+from mail_client.interface import Message as Email, MailClient
 
-# Use dataclass for Email
-@dataclass
-class Email:
-    id: str
-    body: str
 
-# Protocols
-class MailClient(Protocol):
-    def get_messages(self) -> List[Email]: ...
-    def mark_as_read(self, email_id: str) -> None: ...
-
+# AI Client protocol for interacting with LLMs
 class AIClient(Protocol):
     def send_message(self, session_id: str, message: str) -> Dict[str, str]: ...
 
+
+# Final output structure per email
 class SpamResult(TypedDict):
     mail_id: str
     Pct_spam: float
 
-# Helper functions
+
 def sanitize_email_content(email_body: str) -> str:
     """Mask email addresses, phone numbers, and sensitive numeric data."""
     email_body = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', '[EMAIL]', email_body)
@@ -32,6 +23,7 @@ def sanitize_email_content(email_body: str) -> str:
     email_body = re.sub(r'\b\d{12,}\b', '[SENSITIVE]', email_body)
     words = email_body.split()
     return " ".join(words[:50]) + " ..." if len(words) > 50 else " ".join(words)
+
 
 def build_prompt(email_body: str) -> str:
     """Construct the prompt to send to the AI model."""
@@ -44,6 +36,7 @@ def build_prompt(email_body: str) -> str:
     {sanitized}
     """
 
+
 def analyze_email(ai_client: AIClient, session_id: str, email_body: str) -> float:
     """Send email to AI client and extract spam score (scaled to 100)."""
     prompt = build_prompt(email_body)
@@ -54,6 +47,7 @@ def analyze_email(ai_client: AIClient, session_id: str, email_body: str) -> floa
         return float(match.group()) * 10  # Convert score out of 10 to percentage
     logging.warning(f"Could not parse spam probability from response: {ai_message}")
     return 0.0
+
 
 def process_emails(mail_client: MailClient, ai_client: AIClient, session_id: str) -> List[SpamResult]:
     """Process all unread emails and return spam scores."""
@@ -68,12 +62,14 @@ def process_emails(mail_client: MailClient, ai_client: AIClient, session_id: str
             logging.warning(f"Skipped email with missing id/body: {email}")
     return results
 
+
 def save_results_to_csv(results: List[SpamResult], filename: str = "output.csv") -> None:
     """Save results to a CSV file."""
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=["mail_id", "Pct_spam"])
         writer.writeheader()
         writer.writerows(results)
+
 
 def detect_spam_score(email_body: str, ai_client: AIClient, session_id: str) -> float:
     """Wrapper for analyze_email to expose a more intuitive name."""
