@@ -3,12 +3,16 @@
 import re
 import logging
 import csv
-from typing import List, Dict, Protocol, Any, TypedDict
+from typing import List, Dict, Protocol, TypedDict
+from dataclasses import dataclass
 
+# Use dataclass for Email
+@dataclass
 class Email:
     id: str
     body: str
 
+# Protocols
 class MailClient(Protocol):
     def get_messages(self) -> List[Email]: ...
     def mark_as_read(self, email_id: str) -> None: ...
@@ -20,8 +24,9 @@ class SpamResult(TypedDict):
     mail_id: str
     Pct_spam: float
 
+# Helper functions
 def sanitize_email_content(email_body: str) -> str:
-    """Mask email, phone, and sensitive numeric data."""
+    """Mask email addresses, phone numbers, and sensitive numeric data."""
     email_body = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', '[EMAIL]', email_body)
     email_body = re.sub(r'\b\d{10}\b', '[PHONE]', email_body)
     email_body = re.sub(r'\b\d{12,}\b', '[SENSITIVE]', email_body)
@@ -43,10 +48,10 @@ def analyze_email(ai_client: AIClient, session_id: str, email_body: str) -> floa
     """Send email to AI client and extract spam score (scaled to 100)."""
     prompt = build_prompt(email_body)
     response = ai_client.send_message(session_id=session_id, message=prompt)
-    ai_message: str = response.get("content", "")
+    ai_message = response.get("content", "")
     match = re.search(r'\d+(\.\d+)?', ai_message)
     if match:
-        return float(match.group()) * 10
+        return float(match.group()) * 10  # Convert score out of 10 to percentage
     logging.warning(f"Could not parse spam probability from response: {ai_message}")
     return 0.0
 
@@ -59,6 +64,8 @@ def process_emails(mail_client: MailClient, ai_client: AIClient, session_id: str
             pct_spam = analyze_email(ai_client, session_id, email.body)
             results.append({"mail_id": email.id, "Pct_spam": pct_spam})
             mail_client.mark_as_read(email.id)
+        else:
+            logging.warning(f"Skipped email with missing id/body: {email}")
     return results
 
 def save_results_to_csv(results: List[SpamResult], filename: str = "output.csv") -> None:

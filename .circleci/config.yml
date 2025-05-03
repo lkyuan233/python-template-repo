@@ -27,6 +27,7 @@ jobs:
           name: Set PYTHONPATH
           command: |
             echo "export PYTHONPATH=$PYTHONPATH:$(pwd)/ai_conversation_client" >> $BASH_ENV
+            source $BASH_ENV
 
       - run:
           name: Run Ruff Linting

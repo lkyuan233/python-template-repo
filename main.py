@@ -1,69 +1,38 @@
-# mail_client/gmail_message.py
-
-import base64
 import logging
-from typing import List, Dict, Optional, Any, Generator
-from googleapiclient.discovery import Resource
-from googleapiclient.errors import HttpError
+from mail_client.factories import get_gmail_client
+from ai_conversation_client.gemini_api_client import GeminiAPIClient
+from ai_conversation_client.client import AIConversationClient
 
+from spam_detector import process_emails, save_results_to_csv
 
-class GmailMessageClient:
-    def __init__(self, service: Resource, user_id: str = "me") -> None:
-        self.service = service
-        self.user_id = user_id
+def main():
+    # Step 0: Logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
 
-    def _get_parts(self, parts: List[Dict[str, Any]]) -> str:
-        """Recursively search through MIME parts to extract email body."""
-        for part in parts:
-            if part.get("mimeType") == "text/plain" and "data" in part.get("body", {}):
-                return self._decode_body(part["body"]["data"])
-            if "parts" in part:
-                result = self._get_parts(part["parts"])
-                if result:
-                    return result
-        return ""
+    # Step 1: Init Gmail + AI clients
+    mail_client = get_gmail_client()
+    gemini_backend = GeminiAPIClient()
+    ai_client = AIConversationClient(api_client=gemini_backend)
 
-    def _decode_body(self, body: str) -> str:
-        """Decode base64 URL-safe encoded email body."""
-        try:
-            decoded_bytes = base64.urlsafe_b64decode(body.encode("ASCII"))
-            return decoded_bytes.decode("utf-8")
-        except Exception as e:
-            logging.warning(f"Failed to decode body: {e}")
-            return ""
+    # Step 2: Start session
+    user_id = "integration_user"
+    session_id = ai_client.start_new_session(user_id=user_id)
+    logging.info(f"Started AI session: {session_id}")
 
-    def get_body_from_message(self, message: Dict[str, Any]) -> str:
-        """Extract body text from message payload."""
-        payload = message.get("payload", {})
-        if payload.get("mimeType") == "text/plain":
-            body = payload.get("body", {}).get("data")
-            return self._decode_body(body) if body else ""
-        if payload.get("mimeType") == "multipart/alternative":
-            return self._get_parts(payload.get("parts", []))
-        return ""
+    # Step 3: Process emails and get spam scores
+    results = process_emails(mail_client, ai_client, session_id)
+    logging.info(f"Processed {len(results)} emails.")
 
-    def get_messages(self) -> List[Dict[str, str]]:
-        """Get list of unread messages and extract their content."""
-        results: List[Dict[str, str]] = []
-        try:
-            response = self.service.users().messages().list(userId=self.user_id, labelIds=["INBOX"], q="is:unread").execute()
-            messages = response.get("messages", [])
-            for msg in messages:
-                msg_id = msg["id"]
-                message = self.service.users().messages().get(userId=self.user_id, id=msg_id, format="full").execute()
-                body = self.get_body_from_message(message)
-                results.append({"id": msg_id, "body": body})
-        except HttpError as error:
-            logging.error(f"An error occurred: {error}")
-        return results
+    # Step 4: Save to CSV
+    save_results_to_csv(results)
+    logging.info("Saved output to output.csv.")
 
-    def mark_as_read(self, msg_id: str) -> None:
-        """Mark a message as read by removing UNREAD label."""
-        try:
-            self.service.users().messages().modify(
-                userId=self.user_id,
-                id=msg_id,
-                body={"removeLabelIds": ["UNREAD"]}
-            ).execute()
-        except HttpError as error:
-            logging.error(f"An error occurred while marking as read: {error}")
+    # Step 5: End session
+    ai_client.end_session(session_id)
+    logging.info("Ended AI session.")
+
+if __name__ == "__main__":
+    main()
