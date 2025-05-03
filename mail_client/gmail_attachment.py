@@ -3,6 +3,7 @@ import base64
 import binascii
 import mimetypes
 import logging
+from typing import Optional, Dict, Any
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -11,7 +12,12 @@ logger = logging.getLogger(__name__)
 class GmailAttachment(Attachment):
     """Implementation of the Attachment interface for Gmail."""
 
-    def __init__(self, attachment_part, service=None, message_id=None):
+    def __init__(
+        self,
+        attachment_part: Dict[str, Any],
+        service: Optional[Any] = None,
+        message_id: Optional[str] = None
+    ) -> None:
         """Initialize a Gmail attachment.
 
         Args:
@@ -20,9 +26,9 @@ class GmailAttachment(Attachment):
             message_id: The ID of the message the attachment belongs to
         """
         self._attachment_part = attachment_part
-        self._filename = attachment_part.get("filename", "")
-        self._mime_type = attachment_part.get("mimeType", "")
-        self._data_cache = None
+        self._filename: str = attachment_part.get("filename", "")
+        self._mime_type: str = attachment_part.get("mimeType", "")
+        self._data_cache: Optional[bytes] = None
         self._service = service
         self._message_id = message_id
 
@@ -35,7 +41,6 @@ class GmailAttachment(Attachment):
     def content_type(self) -> str:
         """Return the MIME content type of the attachment."""
         if not self._mime_type and self._filename:
-            # Try to guess the MIME type from the filename
             guessed_type, _ = mimetypes.guess_type(self._filename)
             if guessed_type:
                 return guessed_type
@@ -47,11 +52,9 @@ class GmailAttachment(Attachment):
         if self._data_cache is not None:
             return self._data_cache
 
-        body_data = self._attachment_part.get("body", {}).get("data", "")
+        body_data: str = self._attachment_part.get("body", {}).get("data", "")
         if not body_data:
-            attachment_id = self._attachment_part.get("body", {}).get(
-                "attachmentId", ""
-            )
+            attachment_id: str = self._attachment_part.get("body", {}).get("attachmentId", "")
             if attachment_id and self._service and self._message_id:
                 try:
                     attachment = (
@@ -63,16 +66,12 @@ class GmailAttachment(Attachment):
                     )
                     body_data = attachment.get("data", "")
                 except Exception as e:
-                    logger.error(
-                        f"Error occurred while fetching large attachments: {e}"
-                    )
+                    logger.error(f"Error occurred while fetching large attachments: {e}")
                     return b""
             else:
                 return b""
 
-        # Gmail API base64 encoding uses URL-safe alphabet
         try:
-            # Replace URL-safe characters and add padding if needed
             body_data = body_data.replace("-", "+").replace("_", "/")
             padding_needed = len(body_data) % 4
             if padding_needed:
@@ -83,3 +82,4 @@ class GmailAttachment(Attachment):
         except binascii.Error as e:
             logger.error(f"Error decoding attachment data: {e}")
             return b""
+        

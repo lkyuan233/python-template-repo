@@ -11,9 +11,9 @@ from email import encoders
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
-from googleapiclient.discovery import build  # type: ignore
-from googleapiclient.errors import HttpError  # type: ignore
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build, Resource
+from googleapiclient.errors import HttpError
 
 from .gmail_message import GmailMessage
 
@@ -28,31 +28,34 @@ class GmailClient(Client):
     TOKEN_FILE = "token.json"
     CREDENTIALS_FILE = "credentials.json"
 
-    def __init__(self, credentials_file=None, token_file=None):
+    def __init__(self, credentials_file: Optional[str] = None, token_file: Optional[str] = None) -> None:
         self.credentials_file = credentials_file or self.CREDENTIALS_FILE
         self.token_file = token_file or self.TOKEN_FILE
-        self.service = self._get_gmail_service()
+        self.service: Resource = self._get_gmail_service()
 
-    def _get_gmail_service(self):
-        creds = None
+    def _get_gmail_service(self) -> Resource:
+        creds: Optional[Credentials] = None
+
         if os.path.exists(self.token_file):
             try:
                 with open(self.token_file, "r") as token_file:
                     creds_info = json.load(token_file)
-                    creds = Credentials.from_authorized_user_info(creds_info)
+                    creds = Credentials.from_authorized_user_info(creds_info)  # type: ignore[no-untyped-call]
             except (json.JSONDecodeError, ValueError) as e:
                 logger.error(f"Error loading token file: {e}")
 
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
+                creds.refresh(Request())  # type: ignore[no-untyped-call]
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
                     self.credentials_file, self.SCOPES
                 )
                 creds = flow.run_local_server(port=0)
-            with open(self.token_file, "w") as token:
-                token.write(creds.to_json())
+
+            if creds is not None:
+                with open(self.token_file, "w") as token:
+                    token.write(creds.to_json())  # type: ignore[no-untyped-call]
 
         return build("gmail", "v1", credentials=creds)
 

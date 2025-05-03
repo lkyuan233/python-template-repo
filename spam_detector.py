@@ -74,3 +74,7 @@ def save_results_to_csv(results: List[SpamResult], filename: str = "output.csv")
         writer = csv.DictWriter(file, fieldnames=["mail_id", "Pct_spam"])
         writer.writeheader()
         writer.writerows(results)
+
+def detect_spam_score(email_body: str, ai_client: AIClient, session_id: str) -> float:
+    """Wrapper for analyze_email to expose a more intuitive name."""
+    return analyze_email(ai_client, session_id, email_body)
