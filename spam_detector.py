@@ -46,3 +46,11 @@ def save_results_to_csv(results, filename="output.csv"):
         writer = csv.DictWriter(file, fieldnames=["mail_id", "Pct_spam"])
         writer.writeheader()
         writer.writerows(results)
+
+# ✅ New utility function for third-party usage
+def detect_spam_score(email_body, ai_client, session_id):
+    """
+    Public utility to return a spam score given an email body.
+    Handles prompt construction and parsing internally.
+    """
+    return analyze_email(ai_client, session_id, email_body)
