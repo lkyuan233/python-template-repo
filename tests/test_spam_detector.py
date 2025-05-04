@@ -23,7 +23,11 @@ def test_build_prompt_format() -> None:
     email = "hello world this is a test email with words " * 10
     prompt = build_prompt(email)
     assert "Email Content:" in prompt
-    assert len(prompt.split()) <= 70  # Assuming content is truncated
+
+    # Extract just the email content portion
+    email_part = prompt.split("Email Content:")[1]
+    word_count = len(email_part.strip().split())
+    assert word_count <= 55  # 50 words + optional ellipsis (1-2 words)
 
 def test_analyze_email_parses_number_correctly() -> None:
     ai_client = DummyAIClient()
