@@ -1,6 +1,9 @@
-from mail_api import Message
-import html2text  # type: ignore
+from mail_client.interface import Message
+import html2text
 import logging
+import base64
+import binascii
+from typing import Dict, List, Any
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -9,14 +12,14 @@ logger = logging.getLogger(__name__)
 class GmailMessage(Message):
     """Implementation of the Message interface for Gmail."""
 
-    def __init__(self, message_data):
+    def __init__(self, message_data: Dict[str, Any]) -> None:
         """Initialize a Gmail message.
 
         Args:
             message_data: A Gmail API message object
         """
         self._message_data = message_data
-        self._body_cache = None
+        self._body_cache: str | None = None
         self._html_converter = html2text.HTML2Text()
         self._html_converter.ignore_links = False
         self._headers = {
@@ -27,27 +30,27 @@ class GmailMessage(Message):
     @property
     def id(self) -> str:
         """Return the id of the message."""
-        return self._message_data.get("id", "")
+        return str(self._message_data.get("id", ""))
 
     @property
     def from_(self) -> str:
         """Return the sender of the message."""
-        return self._headers.get("from", "")
+        return str(self._headers.get("from", ""))
 
     @property
     def to(self) -> str:
         """Return the recipient of the message."""
-        return self._headers.get("to", "")
+        return str(self._headers.get("to", ""))
 
     @property
     def date(self) -> str:
         """Return the date of the message."""
-        return self._headers.get("date", "")
+        return str(self._headers.get("date", ""))
 
     @property
     def subject(self) -> str:
         """Return the subject of the message."""
-        return self._headers.get("subject", "")
+        return str(self._headers.get("subject", ""))
 
     @property
     def body(self) -> str:
@@ -55,8 +58,7 @@ class GmailMessage(Message):
         if self._body_cache is not None:
             return self._body_cache
 
-        # Extract message body
-        body_text = ""
+        body_text: str = ""
         parts = self._get_parts(self._message_data.get("payload", {}))
 
         for part in parts:
@@ -68,15 +70,18 @@ class GmailMessage(Message):
                 html_body = self._decode_body(part)
                 body_text = self._html_converter.handle(html_body)
 
+        if not body_text:
+            logger.warning(f"No body extracted from email ID: {self.id}")
+
         self._body_cache = body_text
         return body_text
 
-    def _get_parts(self, payload):
+    def _get_parts(self, payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Recursively get all parts from a message payload."""
         if not payload:
             return []
 
-        parts = []
+        parts: List[Dict[str, Any]] = []
         if "body" in payload:
             parts.append(payload)
 
@@ -85,16 +90,12 @@ class GmailMessage(Message):
 
         return parts
 
-    def _decode_body(self, part):
+    def _decode_body(self, part: Dict[str, Any]) -> str:
         """Decode the body of a message part."""
-        import base64
-
         body_data = part.get("body", {}).get("data", "")
         if not body_data:
             return ""
 
-        # Gmail API base64 encoding uses URL-safe alphabet
-        # and might have missing padding
         body_data = body_data.replace("-", "+").replace("_", "/")
         padding_needed = len(body_data) % 4
         if padding_needed:
@@ -103,6 +104,7 @@ class GmailMessage(Message):
         try:
             decoded_data = base64.b64decode(body_data).decode("utf-8")
             return decoded_data
-        except (UnicodeDecodeError, base64.binascii.Error) as e:
-            logger.error(f"Error decoding message body: {e}")
+        except (UnicodeDecodeError, binascii.Error) as e:
+            logger.error(f"Error decoding message body for email ID {self.id}: {e}")
             return ""
+        
