@@ -8,6 +8,16 @@ from ai_conversation_client.client import AIConversationClient
 from spam_detector import process_emails, save_results_to_csv
 
 def main() -> None:
+    """
+    Orchestrates the end-to-end process of detecting spam emails.
+
+    Steps:
+    - Initializes Gmail and AI clients.
+    - Starts a conversation session.
+    - Processes unread emails and computes spam scores using the AI model.
+    - Saves the results to a CSV file.
+    - Ends the conversation session.
+    """
     # Setup logging
     logging.basicConfig(
         level=logging.INFO,

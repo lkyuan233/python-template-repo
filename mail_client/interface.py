@@ -80,7 +80,7 @@ def create_attachment(
     raise NotImplementedError()
 
 
-# ✅ NEWLY ADDED: MailClient Protocol used in spam_detector
+# Added Protocol used in spam_detector
 class MailClient(Protocol):
     """Extended Client interface for spam detection."""
 

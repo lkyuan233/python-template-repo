@@ -17,7 +17,7 @@ class SpamResult(TypedDict):
 
 
 def sanitize_email_content(email_body: str) -> str:
-    """Mask email addresses, phone numbers, and sensitive numeric data."""
+    """Mask email addresses, phone numbers, and sensitive numeric data, then truncate to 50 words."""
     email_body = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', '[EMAIL]', email_body)
     email_body = re.sub(r'\b\d{10}\b', '[PHONE]', email_body)
     email_body = re.sub(r'\b\d{12,}\b', '[SENSITIVE]', email_body)
@@ -26,7 +26,7 @@ def sanitize_email_content(email_body: str) -> str:
 
 
 def build_prompt(email_body: str) -> str:
-    """Construct the prompt to send to the AI model."""
+    """Construct the prompt to send to the AI model using sanitized content."""
     sanitized = sanitize_email_content(email_body)
     return f"""
     Given the following parsed email content, rate how much it appears to be spam by giving it a score between 1 and 10 (decimal allowed), with 10 being most spammy.
