@@ -12,7 +12,13 @@ dependencies = [
     "mypy",
     "requests",
     "python-dotenv",
-    "google-generativeai"
+    "google-generativeai",
+    "google-api-python-client>=2.113.0", # Updated from mail_gmail_impl (2.113.0 is lower than 2.167.0 you had — keeping your version)
+    "google-auth>=2.28.1",
+    "google-auth-oauthlib>=1.2.2",
+    "google-auth-httplib2>=0.1.1",       # Added from mail_gmail_impl
+    "oauth2client>=4.1.3",
+    "html2text>=2023.0.0",
 ]
 
 [tool.ruff]
@@ -21,11 +27,11 @@ exclude = ["tests/snapshots"]
 
 [tool.mypy]
 strict = true
-
-[tool.uv.workspace]
-members = ["mail_api", "mail_gmail_impl"]
+files = ["mail_client", "ai_conversation_client", "tests"]
+ignore_missing_imports = true
 
 [dependency-groups]
-dev = [
-    "types-requests>=2.32.0.20250328",
-]
+dev = ["types-requests>=2.32.0.20250328"]
+
+[tool.setuptools]
+packages = ["mail_client", "ai_conversation_client"]
