@@ -13,7 +13,7 @@ dependencies = [
     "requests",
     "python-dotenv",
     "google-generativeai",
-    "google-api-python-client>=2.113.0", # Updated from mail_gmail_impl (2.113.0 is lower than 2.167.0 you had — keeping your version)
+    "google-api-python-client>=2.113.0", # Updated from mail_gmail_impl
     "google-auth>=2.28.1",
     "google-auth-oauthlib>=1.2.2",
     "google-auth-httplib2>=0.1.1",       # Added from mail_gmail_impl
