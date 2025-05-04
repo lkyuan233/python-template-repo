@@ -1,11 +1,13 @@
 import logging
+from typing import cast
 from mail_client.factories import get_gmail_client
+from mail_client.interface import MailClient
 from ai_conversation_client.gemini_api_client import GeminiAPIClient
 from ai_conversation_client.client import AIConversationClient
 
 from spam_detector import process_emails, save_results_to_csv
 
-def main():
+def main() -> None:
     # Step 0: Setup logging
     logging.basicConfig(
         level=logging.INFO,
@@ -15,7 +17,7 @@ def main():
     print("🚀 Starting main.py...")
 
     # Step 1: Init Gmail + AI clients
-    mail_client = get_gmail_client()
+    mail_client = cast(MailClient, get_gmail_client())
     print("✅ Gmail client initialized:", mail_client)
 
     gemini_backend = GeminiAPIClient()
