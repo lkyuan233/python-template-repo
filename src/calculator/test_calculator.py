@@ -1,6 +1,7 @@
 """Unit tests for Calculator module."""
 
 import pytest
+
 from src.calculator import ICalculator, calculator_api
 
 # Constants for testing

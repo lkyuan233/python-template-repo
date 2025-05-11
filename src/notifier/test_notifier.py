@@ -1,11 +1,11 @@
 """Unit tests for Notifier module."""
 
 import logging
+
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from src.notifier import notifier_api, INotifier
-
+from src.notifier import INotifier, notifier_api
 
 THRESHOLD = 10
 HIGH_VALUE = 15

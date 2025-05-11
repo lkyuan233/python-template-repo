@@ -1,9 +1,10 @@
 """End to end tests for Calculator, Logger & Notifier."""
 
+from collections.abc import Generator
 from pathlib import Path
+
 import pytest
 
-from collections.abc import Generator
 from src.calculator.calculator import Calculator
 from src.logger.logger import Logger
 from src.notifier.notifier import Notifier
@@ -34,9 +35,9 @@ def test_calculation_log_and_notify(
     setup_objects: tuple[Calculator, Logger, Notifier],
     setup_temp_log_file: Path
 ) -> None:
-    """
-    Test that calculation is performed, logged,
-    and notification is sent when the threshold is exceeded.
+    """Test that calculation is performed, logged, and notified.
+
+    This test verifies full pipeline including threshold-based alerts.
     """
     # Unpack the objects from the fixture
     calculator, logger, notifier = setup_objects

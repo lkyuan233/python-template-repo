@@ -10,7 +10,6 @@ from src.calculator.calculator import Calculator
 from src.logger.logger import Logger
 from src.notifier.notifier import Notifier
 
-
 ADD_ALERT_THRESHOLD = 10
 
 

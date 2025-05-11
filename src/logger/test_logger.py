@@ -1,10 +1,11 @@
 """Unit tests for Logger module."""
 
 import logging
+
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from src.logger import logger_api, ILogger
+from src.logger import ILogger, logger_api
 
 
 @pytest.fixture
