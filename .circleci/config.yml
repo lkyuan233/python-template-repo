@@ -32,12 +32,12 @@ jobs:
       - run:
           name: Run Ruff Linting
           command: |
-            ruff check src/ tests/ || true
+            ruff check src/ tests/
 
       - run:
           name: Run Mypy Type Checking
           command: |
-            mypy src/ || true
+            mypy src/
 
       - run:
           name: Verify Tests Exist
