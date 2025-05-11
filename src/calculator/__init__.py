@@ -1,7 +1,9 @@
 """Calculator module for performing basic arithmetic operations."""
 
 from abc import ABC, abstractmethod
+
 from .calculator import Calculator
+
 
 # Step 1: Define the interface for Calculator
 class ICalculator(ABC):
@@ -9,19 +11,24 @@ class ICalculator(ABC):
 
     @abstractmethod
     def add(self, a: float, b: float) -> float:
+        """Return the sum of a and b."""
         pass
 
     @abstractmethod
     def subtract(self, a: float, b: float) -> float:
+        """Return the difference when b is subtracted from a."""
         pass
 
     @abstractmethod
     def multiply(self, a: float, b: float) -> float:
+        """Return the product of a and b."""
         pass
 
     @abstractmethod
     def divide(self, a: float, b: float) -> float:
+        """Return the result of dividing a by b."""
         pass
+
 
 # Step 2: Provide a default implementation of the interface
 calculator_api: ICalculator = Calculator()

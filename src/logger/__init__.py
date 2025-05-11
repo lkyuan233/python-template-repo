@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+
 from .logger import Logger
 
 # Step 1: Define the interface for Logger

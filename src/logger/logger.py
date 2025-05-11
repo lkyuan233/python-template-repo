@@ -8,17 +8,21 @@ LOG_FILE = Path("operations.log")
 # Configure logging only if not already configured
 logger = logging.getLogger(__name__)  # Uses dynamic module name
 if not logger.hasHandlers():
-    handler = logging.FileHandler(LOG_FILE, mode="a")  # Append mode (does not overwrite logs)
+    handler = logging.FileHandler(
+        LOG_FILE, mode="a"
+    )  # Append mode (does not overwrite logs)
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     handler.setLevel(logging.INFO)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
 
+
 class Logger:
     """Logger class to log operations performed."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize Logger with default log file."""
         self.log_file = LOG_FILE
 
     def set_log_file(self, log_file: Path) -> None:

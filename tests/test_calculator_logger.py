@@ -1,12 +1,18 @@
 """Integration tests for Calculator, Logger, and Notifier components."""
 
-import logging 
+import logging
 from unittest.mock import Mock
+
 import pytest
 from pytest import LogCaptureFixture
+
 from src.calculator.calculator import Calculator
 from src.logger.logger import Logger
 from src.notifier.notifier import Notifier
+
+
+ADD_ALERT_THRESHOLD = 10
+
 
 class TestCalculatorLoggerIntegration:
     """Test suite for Calculator and Logger integration."""
@@ -25,57 +31,57 @@ class TestCalculatorLoggerIntegration:
         ("multiply", 7, 2, 14),
     ])
     def test_calculator_logger_operations(
-        self, 
+        self,
         setup_components: tuple[Calculator, Logger, Mock],
-        operation: str,  
-        a: int, 
-        b: int, 
+        operation: str,
+        a: int,
+        b: int,
         expected: int,
-        caplog: LogCaptureFixture
+        caplog: LogCaptureFixture,
     ) -> None:
-        """Testing if basic calculator operations are performed and logged correctly."""
+        """Test if basic calculator operations are performed and logged correctly."""
         calculator, logger, mock_notifier = setup_components
 
-        with caplog.at_level(logging.INFO): 
-            result = getattr(calculator, operation)(a, b)  # Perform calculation
+        with caplog.at_level(logging.INFO):
+            result = getattr(calculator, operation)(a, b)
             log_message = f"Operation: {operation} {a} and {b}. Result: {result}"
-        
-            logger.log(log_message)  # Log the operation
+
+            logger.log(log_message)
 
             assert result == expected
-            assert log_message in caplog.text 
+            assert log_message in caplog.text
 
-            if operation == "add" and expected > 10:  
-                mock_notifier.send_alert(expected) 
-                mock_notifier.send_alert.assert_called_once_with(expected)  
+            if operation == "add" and expected > ADD_ALERT_THRESHOLD:
+                mock_notifier.send_alert(expected)
+                mock_notifier.send_alert.assert_called_once_with(expected)
 
     def test_calculator_logger_division(
-        self, 
-        setup_components: tuple[Calculator, Logger, Mock], 
-        caplog: LogCaptureFixture
+        self,
+        setup_components: tuple[Calculator, Logger, Mock],
+        caplog: LogCaptureFixture,
     ) -> None:
-        """Testing division operation."""
+        """Test division operation."""
         calculator, logger, _ = setup_components
 
-        with caplog.at_level(logging.INFO): 
+        with caplog.at_level(logging.INFO):
             result = calculator.divide(20, 5)
             expected_result = 4
             log_message = f"Operation: divide 20 and 5. Result: {result}"
-        
+
             logger.log(log_message)
 
             assert result == expected_result
             assert log_message in caplog.text
 
     def test_calculator_logger_division_by_zero(
-        self, 
-        setup_components: tuple[Calculator, Logger, Mock], 
-        caplog: LogCaptureFixture
+        self,
+        setup_components: tuple[Calculator, Logger, Mock],
+        caplog: LogCaptureFixture,
     ) -> None:
-        """Testing if division by zero error is caught and logged correctly."""
+        """Test division by zero and proper logging."""
         calculator, logger, _ = setup_components
 
-        with caplog.at_level(logging.INFO): 
+        with caplog.at_level(logging.INFO):
             with pytest.raises(ValueError, match="Cannot divide by zero") as exc_info:
                 calculator.divide(10, 0)
 
