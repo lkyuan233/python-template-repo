@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .logger import Logger
 
+
 # Step 1: Define the interface for Logger
 class ILogger(ABC):
     """Interface for a logger component."""
@@ -18,6 +19,7 @@ class ILogger(ABC):
     def set_log_file(self, log_file: Path) -> None:
         """Set a custom log file."""
         pass
+
 
 # Step 2: Provide a default instance implementing the interface
 logger_api: ILogger = Logger()

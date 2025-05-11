@@ -1,21 +1,19 @@
 """Unit tests for Calculator module."""
 
 import pytest
-
-from src.calculator import calculator_api, ICalculator
+from src.calculator import ICalculator, calculator_api
 
 # Constants for testing
+ONE = 1
 TWO = 2
 THREE = 3
 FIVE = 5
 SIX = 6
-ONE = 1
-ZERO = 0
 
 
 @pytest.fixture
 def calculator() -> ICalculator:
-    """Fixture to use the shared Calculator API instance."""
+    """Fixture to provide the calculator API."""
     return calculator_api
 
 
@@ -42,5 +40,5 @@ def test_divide(calculator: ICalculator) -> None:
 def test_divide_by_zero(calculator: ICalculator) -> None:
     """Test division by zero raises ValueError."""
     with pytest.raises(ValueError) as excinfo:
-        calculator.divide(FIVE, ZERO)
-    assert str(excinfo.value) == "Cannot divide by zero"
+        calculator.divide(FIVE, 0)
+    assert "Cannot divide by zero" in str(excinfo.value)

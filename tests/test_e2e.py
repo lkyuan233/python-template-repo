@@ -3,10 +3,10 @@
 from pathlib import Path
 import pytest
 
+from collections.abc import Generator
 from src.calculator.calculator import Calculator
 from src.logger.logger import Logger
 from src.notifier.notifier import Notifier
-from collections.abc import Generator
 
 
 @pytest.fixture
@@ -34,7 +34,10 @@ def test_calculation_log_and_notify(
     setup_objects: tuple[Calculator, Logger, Notifier],
     setup_temp_log_file: Path
 ) -> None:
-    """Test that calculation is performed, logged, and notification is sent when the threshold is exceeded."""
+    """
+    Test that calculation is performed, logged,
+    and notification is sent when the threshold is exceeded.
+    """
     # Unpack the objects from the fixture
     calculator, logger, notifier = setup_objects
 
@@ -61,7 +64,7 @@ def test_calculation_log_and_notify(
 
     # 2. Check if the send_alert method returned the correct alert message
     assert alert_message == f"Alert! Value {expected_result} exceeds threshold 100"
-    
+
     # 3. Check the log file to verify the operation was logged
     with setup_temp_log_file.open() as log_file:
         log_content = log_file.read()
