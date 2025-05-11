@@ -1,11 +1,10 @@
 """Unit tests for Notifier module."""
 
 import logging
-
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from src.notifier import notifier_api
+from src.notifier import notifier_api, INotifier
 
 
 THRESHOLD = 10
@@ -14,13 +13,13 @@ LOW_VALUE = 5
 
 
 @pytest.fixture
-def notifier_instance():
+def notifier_instance() -> INotifier:
     """Fixture to use the shared Notifier API instance."""
     return notifier_api  # Uses API from `__init__.py`
 
 
 def test_send_alert(
-    notifier_instance, caplog: LogCaptureFixture
+    notifier_instance: INotifier, caplog: LogCaptureFixture
 ) -> None:
     """Test that Notifier sends an alert when the threshold is exceeded."""
     with caplog.at_level(logging.WARNING):  # Capture logs at WARNING level

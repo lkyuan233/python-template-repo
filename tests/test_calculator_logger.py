@@ -39,7 +39,7 @@ class TestCalculatorLoggerIntegration:
         expected: int,
         caplog: LogCaptureFixture,
     ) -> None:
-        """Test if basic calculator operations are performed and logged correctly."""
+        """Testing if basic calculator operations are performed and logged correctly."""
         calculator, logger, mock_notifier = setup_components
 
         with caplog.at_level(logging.INFO):
@@ -60,7 +60,7 @@ class TestCalculatorLoggerIntegration:
         setup_components: tuple[Calculator, Logger, Mock],
         caplog: LogCaptureFixture,
     ) -> None:
-        """Test division operation."""
+        """Testing division operation."""
         calculator, logger, _ = setup_components
 
         with caplog.at_level(logging.INFO):
@@ -78,7 +78,7 @@ class TestCalculatorLoggerIntegration:
         setup_components: tuple[Calculator, Logger, Mock],
         caplog: LogCaptureFixture,
     ) -> None:
-        """Test division by zero and proper logging."""
+        """Testing if division by zero error is caught and logged correctly."""
         calculator, logger, _ = setup_components
 
         with caplog.at_level(logging.INFO):

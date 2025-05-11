@@ -6,7 +6,8 @@ import pytest
 from src.calculator.calculator import Calculator
 from src.logger.logger import Logger
 from src.notifier.notifier import Notifier
-import os
+from collections.abc import Generator
+
 
 @pytest.fixture
 def setup_objects() -> tuple[Calculator, Logger, Notifier]:
@@ -16,8 +17,9 @@ def setup_objects() -> tuple[Calculator, Logger, Notifier]:
     notifier = Notifier(threshold=100)  # Set threshold to 100 for testing
     return calculator, logger, notifier
 
+
 @pytest.fixture
-def setup_temp_log_file():
+def setup_temp_log_file() -> Generator[Path, None, None]:
     """Fixture to set up a temporary log file for testing."""
     temp_log_file = Path("temp_operations.log")
     if temp_log_file.exists():
@@ -27,7 +29,11 @@ def setup_temp_log_file():
     if temp_log_file.exists():
         temp_log_file.unlink()
 
-def test_calculation_log_and_notify(setup_objects: tuple[Calculator, Logger, Notifier], setup_temp_log_file) -> None:
+
+def test_calculation_log_and_notify(
+    setup_objects: tuple[Calculator, Logger, Notifier],
+    setup_temp_log_file: Path
+) -> None:
     """Test that calculation is performed, logged, and notification is sent when the threshold is exceeded."""
     # Unpack the objects from the fixture
     calculator, logger, notifier = setup_objects

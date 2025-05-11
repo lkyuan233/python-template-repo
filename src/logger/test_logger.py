@@ -1,21 +1,20 @@
 """Unit tests for Logger module."""
 
 import logging
-
 import pytest
 from _pytest.logging import LogCaptureFixture
 
-from src.logger import logger_api
+from src.logger import logger_api, ILogger
 
 
 @pytest.fixture
-def logger_instance():
+def logger_instance() -> ILogger:
     """Fixture to use the shared Logger API instance."""
     return logger_api  # Uses the API from `__init__.py`
 
 
 def test_log_message(
-    logger_instance, caplog: LogCaptureFixture
+    logger_instance: ILogger, caplog: LogCaptureFixture
 ) -> None:
     """Test if a message is logged correctly."""
     test_message = "This is a test log entry"
