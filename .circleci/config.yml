@@ -37,8 +37,7 @@ jobs:
       - run:
           name: Run Mypy Type Checking
           command: |
-            export PYTHONPATH=src
-            mypy src/ --explicit-package-bases
+            PYTHONPATH=src mypy src/ --explicit-package-bases
 
       - run:
           name: Verify Tests Exist
