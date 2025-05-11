@@ -29,7 +29,7 @@ class TestCalculatorLoggerIntegration:
         ("subtract", 10, 4, 6),
         ("multiply", 7, 2, 14),
     ])
-    def test_calculator_logger_operations(
+    def test_calculator_logger_operations(  # noqa: PLR0913
         self,
         setup_components: tuple[Calculator, Logger, Mock],
         operation: str,
