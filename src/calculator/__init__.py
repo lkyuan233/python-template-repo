@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from .calculator import Calculator
+from calculator import Calculator
 
 
 # Step 1: Define the interface for Calculator
