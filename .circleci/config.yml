@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Run Mypy Type Checking
           command: |
-            mypy src/
+            uv run mypy src/
 
       - run:
           name: Verify Tests Exist
