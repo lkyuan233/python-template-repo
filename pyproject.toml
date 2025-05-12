@@ -50,6 +50,7 @@ strict = true  # Enables strict type checking
 ignore_missing_imports = true  # Ignore type errors for missing third-party libraries
 warn_unused_ignores = true  # Warn if `# type: ignore` comments are unnecessary
 exclude = ["tests/"]  # Exclude test files from mypy checks
+mypy_path = "src"
 
 # Ruff Configuration (for linting and formatting)
 [tool.ruff]
