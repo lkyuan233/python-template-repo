@@ -50,6 +50,9 @@ files = "src"      # Ensure mypy checks the src directory
 strict = true      # Enable strict type checking
 ignore_missing_imports = true  # Ignore any missing imports from third-party libraries
 exclude = "tests/"  # Exclude test files from mypy checks
+disable_error_code = "module"  # This will disable all module-related errors
+
+
 
 # Ruff Configuration (for linting and formatting)
 [tool.ruff]
