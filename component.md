@@ -34,45 +34,47 @@ Components interact through well-defined interfaces (typically class methods). F
 
 ## Directory Structure
 
+```
 project_root/
 
 │── .circleci/
-│ │── config.yml
+    │── config.yml
 │── .github/
-│ │── ISSUE_TEMPLATE/
-│ │── bug_report.md
-│ │── feature_request.md
-│ │── pull_request_template.md
+    │── ISSUE_TEMPLATE/
+        │──bug_report.md
+        │── feature_request.md
+        │── pull_request_template.md
 │── src/
-│ ├── calculator/ # Provides basic arithmetic operations
-│ ├── init.py
-│ ├── calculator.py
-│ ├── pyproject.toml
-│ ├── test_calculator.py
-│ ├── logger/ # Manages logging of operations
-│ ├── init.py
-│ ├── logger.py
-│ ├── pyproject.toml
-│ ├── test_logger.py
-│ ├── notifier/ # Sends alerts when specified conditions are met
-│ ├── init.py
-│ ├── notifier.py
-│ ├── pyproject.toml
-│ ├── test_notifier.py
+│   ├── calculator/   # Provides basic arithmetic operations
+        ├── __init__.py
+        ├── calculator.py
+        ├── pyproject.toml
+        ├── test_calculator.py
+│   ├── logger/       # Manages logging of operations
+        ├── __init__.py
+        ├── logger.py
+        ├── pyproject.toml
+        ├── test_logger.py
+│   ├── notifier/     # Sends alerts when specified conditions are met
+        ├── __init__.py
+        ├── notifier.py
+        ├── pyproject.toml
+        ├── test_notifier.py
 │── tests/
-│ ├── test_calculator_logger.py
-│ ├── test_e2e.py
-│ ├── test_logger_notifier.py
-│── .gitignore
+    ├── test_calculator_logger.py
+    ├── test_e2e.py
+    ├── test_logger_notifier.py
+│── .gitignore 
 │── .pre-commit-config.yaml
 │── .python-version
-│── component.md # Documentation of project components
+│── component.md       # Documentation of project components
 │── LICENSE
 │── mypy.ini
 │── pyproject.toml
-│── README.md # Project overview and setup instructions
+│── README.md           # Project overview and setup instructions
 │── requirements.txt
 │── uv.lock
+```
 
 ---
 
