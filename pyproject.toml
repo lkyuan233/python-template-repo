@@ -45,12 +45,11 @@ omit = [
 
 # Mypy configuration (for type checking)
 [tool.mypy]
-plugins = ["numpy.typing.mypy_plugin"]  # Enables better type checking for NumPy
-strict = true  # Enables strict type checking
-ignore_missing_imports = true  # Ignore type errors for missing third-party libraries
-warn_unused_ignores = true  # Warn if `# type: ignore` comments are unnecessary
-exclude = ["tests/"]  # Exclude test files from mypy checks
-mypy_path = "src"
+mypy_path = "src"  # Explicitly set the search path to src
+files = "src"      # Ensure mypy checks the src directory
+strict = true      # Enable strict type checking
+ignore_missing_imports = true  # Ignore any missing imports from third-party libraries
+exclude = "tests/"  # Exclude test files from mypy checks
 
 # Ruff Configuration (for linting and formatting)
 [tool.ruff]
