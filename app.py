@@ -121,6 +121,12 @@ def compare_overall_coverage(base_cov, pr_cov):
     print("\n📊 Overall Coverage Summary:")
     print(f"   🔹 Covered lines: {b_cov}/{b_total} ({b_pct:.2f}%) → {p_cov}/{p_total} ({p_pct:.2f}%)")
     print(f"   🔺 Change: {delta:+.2f}%")
+    if delta > 0:
+        print("   🟢 Coverage improved")
+    elif delta < 0:
+        print("   🔴 Coverage worsened")
+    else:
+        print("   🟡 No change in coverage")
 
 def main():
     parser = argparse.ArgumentParser()
