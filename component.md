@@ -1,10 +1,39 @@
 # Project Components
 
-## Overview
+## What is a Component?
 
-This project is structured into modular components, each handling a specific functionality. Components are organized within the `src/` directory to ensure separation of concerns, maintainability, and scalability.
+A *component* in this project is a self-contained, reusable module that encapsulates a specific piece of functionality. Each component:
 
-### Directory Structure
+- Has a clear, well-defined responsibility.
+- Exposes a simple interface for interaction with other parts of the system.
+- Is independently developed, tested, and maintained.
+- Minimizes dependencies on other components to ensure modularity and scalability.
+
+*In this project*, a component is typically organized as its own directory within the src/ folder, containing its code, tests, and configuration files. This approach enables separation of concerns, easier testing, and straightforward extensibility.
+
+## Why Modular Components?
+
+Using modular components provides several key benefits:
+
+- *Maintainability:* Each component can be updated or fixed independently, reducing risk of side effects.
+- *Reusability:* Components can be reused across different parts of the project or in future projects.
+- *Testability:* Isolated components are easier to unit test.
+- *Scalability:* New features can be added as new components without disrupting existing code.
+- *Collaboration:* Teams can work on different components simultaneously with minimal conflicts.
+
+## Component Structure and Interaction
+
+Each component resides in its own directory under src/, containing:
+
+- Implementation code (e.g., calculator.py)
+- Initialization file (__init__.py)
+- Local configuration (pyproject.toml)
+- Unit tests (e.g., test_calculator.py)
+
+Components interact through well-defined interfaces (typically class methods). For example, the Calculator component performs arithmetic, the Logger component logs operations, and the Notifier component sends alerts based on values.
+
+## Directory Structure
+
 ```
 project_root/
 
@@ -47,58 +76,64 @@ project_root/
 │── uv.lock
 ```
 
-Each component is designed as an independent module that can be extended or modified with minimal impact on the rest of the system.
+---
 
 ## Components
 
 ### 1. Calculator
 
-**Location:** `src/calculator.py`
+*Location:* src/calculator/
 
-**Description:**
+*Description:*  
 Provides basic arithmetic operations essential for mathematical calculations.
 
-**Classes:**
+*Classes:*
 
-- `Calculator`: Contains methods for basic arithmetic operations.
+- Calculator: Contains methods for basic arithmetic operations.
 
-**Methods:**
+*Methods:*
 
-- `add(a: float, b: float) -> float`: Returns the sum of `a` and `b`.
-- `subtract(a: float, b: float) -> float`: Returns the difference between `a` and `b`.
-- `multiply(a: float, b: float) -> float`: Returns the product of `a` and `b`.
-- `divide(a: float, b: float) -> float`: Returns the quotient of `a` and `b`.
+- add(a: float, b: float) -> float: Returns the sum of a and b.
+- subtract(a: float, b: float) -> float: Returns the difference between a and b.
+- multiply(a: float, b: float) -> float: Returns the product of a and b.
+- divide(a: float, b: float) -> float: Returns the quotient of a and b.
+
+---
 
 ### 2. Logger
 
-**Location:** `src/logger.py`
+*Location:* src/logger/
 
-**Description:**
+*Description:*  
 Handles logging functionalities to track operations and system events.
 
-**Classes:**
+*Classes:*
 
-- `Logger`: Provides a method to log messages.
+- Logger: Provides a method to log messages.
 
-**Methods:**
+*Methods:*
 
-- `log(message: str) -> None`: Logs the provided message for debugging and tracking purposes.
+- log(message: str) -> None: Logs the provided message for debugging and tracking purposes.
+
+---
 
 ### 3. Notifier
 
-**Location:** `src/notifier.py`
+*Location:* src/notifier/
 
-**Description:**
+*Description:*  
 Monitors values and triggers alerts when predefined conditions are met.
 
-**Classes:**
+*Classes:*
 
-- `Notifier`: Checks values against a threshold and sends alerts.
+- Notifier: Checks values against a threshold and sends alerts.
 
-**Methods:**
+*Methods:*
 
-- `send_alert(value: float) -> str`: Returns an alert message if `value` exceeds the threshold; otherwise, indicates the value is within the limit.
+- send_alert(value: float) -> str: Returns an alert message if value exceeds the threshold; otherwise, indicates the value is within the limit.
 
+---
 
+## Summary
 
-
+This modular, component-based architecture ensures that each feature is isolated, testable, and easily maintainable. By defining and adhering to clear component boundaries, the project remains robust, scalable, and easy to extend.
