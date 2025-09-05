@@ -1,0 +1,20 @@
+[project]
+name = "python-template-repo"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "pytest>=8.3.5",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+]
+
+[tool.ruff]
+line-length = 100
+exclude = ["tests/snapshots"]
+
+[tool.mypy]
+strict = true
